@@ -123,6 +123,7 @@ class Chatbot:
 
         :param text: a user-supplied line of text
         :returns: the same text, pre-processed
+        + Stella
         """
         ########################################################################
         # TODO: Preprocess the text into a desired format.                     #
