@@ -123,7 +123,6 @@ class Chatbot:
 
         :param text: a user-supplied line of text
         :returns: the same text, pre-processed
-        + Stella
         """
         ########################################################################
         # TODO: Preprocess the text into a desired format.                     #
@@ -329,7 +328,7 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 100000000000000
+        similarity = 0
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
