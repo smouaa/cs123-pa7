@@ -60,7 +60,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Katie!!"
+        goodbye_message = "Goodbye!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
