@@ -139,7 +139,7 @@ class Chatbot:
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
-
+        Albert
         Given an input text which has been pre-processed with preprocess(),
         this method should return a list of movie titles that are potentially
         in the text.
@@ -328,7 +328,7 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 0
+        similarity = 100000000000000
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
