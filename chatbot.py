@@ -7,6 +7,7 @@ import util
 
 import numpy as np
 import math
+import re
 
 
 # noinspection PyMethodMayBeStatic
@@ -315,8 +316,8 @@ class Chatbot:
         # returns = binarized version of the matrix
 
         new_ratings = ratings
-        new_ratings[new_ratings > threshold] = 1
-        new_ratings[new_ratings <= threshold] = -1
+        new_ratings[(new_ratings > threshold) & (new_ratings != 0)] = 1
+        new_ratings[(new_ratings <= threshold) & (new_ratings != 0)] = -1
 
         binarized_ratings = new_ratings
 
@@ -402,9 +403,40 @@ class Chatbot:
         # do not use self.ratings
         
         # user_ratings - binarized 1D numpy array of user's movie ratings
+
         # ratings_matrix - binarized 2D numpy matrix of all ratings, where ratings_matrix[i, j] is the rating for movie i by user j
+        # Input the provided vector of the user's preferences and a pre-processed matrix of ratings by other users 
+        # So you can assume ratings_matrix does not contain the current user's ratings.
+
         # k - number of recommendations to generate
-        # creative - whether the chatbot is in creative mode
+
+        # start with user_ratings
+
+        # for each movie i in the dataset
+        # calculate the rating of user's rating of the movie i and the cosine between vectors for movies i and j
+
+        # recommend movies with max rxi.
+
+        # look at movies not rated by user
+        # pull vector from ratings matrix for a movie
+
+        scores = []
+
+        for i in range(len(user_ratings)):
+            if user_ratings[i] == 0:                    # if there is no rating yet, grab vector for it
+                unwatched_vector = ratings_matrix[i] 
+
+                sum = 0
+                for j in range(len(ratings_matrix)):    # go through all movies 
+                    if user_ratings[j] != 0:            # if a particular movie has been watched, compute cosine sim and add it * weight
+                        sum += user_ratings[j] * self.similarity(unwatched_vector, user_ratings[j])
+                scores.append(sum)
+                    
+
+
+            else:
+                scores.append(0)
+
 
 
         recommendations = []
