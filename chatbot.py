@@ -312,7 +312,7 @@ class Chatbot:
         # zeros.
         
         # ratings = num_movies x num_users matrix of user ratings, from 0.5 to 5.0
-        # param threshold = numerical rating above which ratings are considered positive
+        # threshold = numerical rating above which ratings are considered positive
         # returns = binarized version of the matrix
 
         new_ratings = ratings
@@ -395,30 +395,15 @@ class Chatbot:
         # scores.                                                              #
         ########################################################################
 
-        # Populate this list with k movie indices to recommend to the user.
-
-        # k movies to recommend 
-        # user_ratings and ratings_matrix both binarized
         # exclude movies the user has already rated
-        # do not use self.ratings
-        
-        # user_ratings - binarized 1D numpy array of user's movie ratings
 
         # ratings_matrix - binarized 2D numpy matrix of all ratings, where ratings_matrix[i, j] is the rating for movie i by user j
-        # Input the provided vector of the user's preferences and a pre-processed matrix of ratings by other users 
-        # So you can assume ratings_matrix does not contain the current user's ratings.
+        # input the provided vector of the user's preferences and a pre-processed matrix of ratings by other users 
+        # can assume ratings_matrix does not contain the current user's ratings.
 
-        # k - number of recommendations to generate
-
-        # start with user_ratings
 
         # for each movie i in the dataset
         # calculate the rating of user's rating of the movie i and the cosine between vectors for movies i and j
-
-        # recommend movies with max rxi.
-
-        # look at movies not rated by user
-        # pull vector from ratings matrix for a movie
 
         scores = []
         recommendations = []
