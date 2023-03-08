@@ -30,8 +30,10 @@ class Chatbot:
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.edge_cases = {'enjoyed': 'enjoy', 'loved': 'love', 'hated': 'hate', 'liked': 'like', 'disliked': 'dislike', 'loving': 'love', 'loves': 'love', 'hates': 'hate', 'hating': 'hate', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'dislikes': 'dislike', 'disliking': 'dislike', 'likes': 'like', 'liking': 'like'}
 
-        sentiment = self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))
-        print(sentiment) 
+        print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))) 
+        print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess(self, 'I hated "10 things I hate about you", but I loved it'))) 
+        print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess(self, '"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
+        print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was stupid at first, but I then enjoyed it'))) 
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -219,25 +221,48 @@ class Chatbot:
         :returns: a numerical value for the sentiment of the text
         """
 
+        # List of words that negate the sentiment of the phrase
+        # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
+        negators = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
+
         splitter = shlex.split(preprocessed_input, posix=False)
         total_pos = 0
         total_neg = 0
+        last_word = 0
+        negator_present = False
 
         index = 0
         for word in splitter:
+            if word in negators:
+                negator_present = True
             if "\"" not in word and word in self.sentiment:
                 if self.sentiment[word] == 'pos':
                     total_pos += 1
+                    last_word = 1
                 else:
                     total_neg += 1
+                    last_word = -1
             index += 1
 
-        if total_pos > total_neg:
-            return 1
-        elif total_pos < total_neg:
-            return -1
+        if total_pos + total_neg < 2:
+            if total_pos > total_neg:
+                return 1
+            elif total_pos < total_neg:
+                return -1
+            else:
+                return 0
+        elif negator_present and total_pos >= 1 and total_neg >= 1:
+            if last_word == 1:
+                return 1
+            else:
+                return -1
         else:
-            return 0
+            if total_pos > total_neg:
+                return 1
+            elif total_pos < total_neg:
+                return -1
+            else:
+                return 0            
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
