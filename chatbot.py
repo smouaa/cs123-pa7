@@ -26,6 +26,7 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
+        print(self.sentiment['dislike'])
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -203,6 +204,9 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
+
+        print(self.sentiment['dislike'])
+
         return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
