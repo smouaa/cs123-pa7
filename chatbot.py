@@ -6,6 +6,7 @@
 import util
 
 import numpy as np
+import math
 
 
 # noinspection PyMethodMayBeStatic
@@ -337,11 +338,25 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 0
+
+        numerator = np.dot(u, v)
+        u_norm = 0
+        v_norm = 0
+        
+        for w in u:
+            u_norm += w ** 2
+        u_norm = math.sqrt(u_norm)
+        
+        for w in v:
+            v_norm += w ** 2
+        v_norm = math.sqrt(v_norm)
+        
+        cosine_sim = numerator / (u_norm * v_norm)
+    
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
-        return similarity
+        return cosine_sim
 
     def recommend(self, user_ratings, ratings_matrix, k=10, creative=False):
         """Generate a list of indices of movies to recommend using collaborative
@@ -380,6 +395,7 @@ class Chatbot:
         ########################################################################
 
         # Populate this list with k movie indices to recommend to the user.
+        
         recommendations = []
 
         ########################################################################
