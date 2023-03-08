@@ -8,6 +8,7 @@ import util
 import numpy as np
 import shlex
 import math
+import string
 import re
 from porter_stemmer import PorterStemmer
 
@@ -28,12 +29,14 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
-        self.edge_cases = {'enjoyed': 'enjoy', 'loved': 'love', 'hated': 'hate', 'liked': 'like', 'disliked': 'dislike', 'loving': 'love', 'loves': 'love', 'hates': 'hate', 'hating': 'hate', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'dislikes': 'dislike', 'disliking': 'dislike', 'likes': 'like', 'liking': 'like'}
+        self.edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like'}
 
         print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))) 
         print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess(self, 'I hated "10 things I hate about you", but I loved it'))) 
         print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess(self, '"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
-        print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was stupid at first, but I then enjoyed it'))) 
+        print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was great at first, but I then hated it')))
+        print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
+        print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -147,18 +150,26 @@ class Chatbot:
         # This parses through the list of words and stems them, checking first for edge cases
         index = 0
         for word in splitter:
-            if "\"" not in word and word in self.edge_cases:
-                #text = text.replace(word, self.edge_cases[word])
-                splitter[index] = self.edge_cases[word]
-            elif "\"" not in word:
-                #text = text.replace(word, PorterStemmer().stem(word, 0, len(word)-1))
-                splitter[index] = PorterStemmer().stem(word, 0, len(word)-1)
+            # Parses strings that do not contain ""
+            if "\"" not in word:
+                # Removes misc. punctuation and makes all words lowercase
+                word = word.translate(str.maketrans('', '', string.punctuation)).lower()
+                splitter[index] = word
+                if word in self.edge_cases:
+                    #text = text.replace(word, self.edge_cases[word])
+                    splitter[index] = self.edge_cases[word]
+            
+            # Removed Porter stemmer for now, since it was messing everything up
+            # elif "\"" not in word:
+            #     #text = text.replace(word, PorterStemmer().stem(word, 0, len(word)-1))
+            #     splitter[index] = PorterStemmer().stem(word, 0, len(word)-1)
+            index += 1
     
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
 
-        # to return a string, uncomment the lines in the loop and change the return statement to text
+        # To return a string instead of a list, uncomment the lines in the loop and change the return statement to text
         return splitter
 
     def extract_titles(self, preprocessed_input):
@@ -228,9 +239,9 @@ class Chatbot:
 
         # List of words that negate the sentiment of the phrase
         # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
+        #print(preprocessed_input)
         negators = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
 
-        #splitter = shlex.split(preprocessed_input, posix=False)
         total_pos = 0
         total_neg = 0
         last_word = 0
@@ -238,6 +249,7 @@ class Chatbot:
 
         index = 0
         for word in preprocessed_input:
+
             if word in negators:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
@@ -249,6 +261,11 @@ class Chatbot:
                     last_word = -1
             index += 1
 
+        print("Total Positive: ", total_pos)
+        print("Total Negative: ", total_neg)
+        print("Negator Present: ", negator_present)
+
+        # if the total number of sentiment words is 1 or less, do basic processing
         if total_pos + total_neg < 2:
             if total_pos > total_neg:
                 return 1
@@ -256,11 +273,14 @@ class Chatbot:
                 return -1
             else:
                 return 0
+        # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
         elif negator_present and total_pos >= 1 and total_neg >= 1:
+            # if the last word is positive, return 1
             if last_word == 1:
                 return 1
             else:
                 return -1
+        # Catch-all for all other cases: just compare the total number of positive and negative words
         else:
             if total_pos > total_neg:
                 return 1
