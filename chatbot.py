@@ -308,7 +308,16 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        binarized_ratings = np.zeros_like(ratings)
+        
+        # ratings = num_movies x num_users matrix of user ratings, from 0.5 to 5.0
+        # param threshold = numerical rating above which ratings are considered positive
+        # returns = binarized version of the matrix
+
+        new_ratings = ratings
+        new_ratings[new_ratings > threshold] = 1
+        new_ratings[new_ratings <= threshold] = -1
+
+        binarized_ratings = new_ratings
 
         ########################################################################
         #                        END OF YOUR CODE                              #
