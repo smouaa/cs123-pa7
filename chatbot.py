@@ -421,25 +421,26 @@ class Chatbot:
         # pull vector from ratings matrix for a movie
 
         scores = []
+        recommendations = []
 
         for i in range(len(user_ratings)):
             if user_ratings[i] == 0:                    # if there is no rating yet, grab vector for it
-                unwatched_vector = ratings_matrix[i] 
+                unwatched_vector = ratings_matrix[i]
 
                 sum = 0
-                for j in range(len(ratings_matrix)):    # go through all movies 
+                for j in range(len(ratings_matrix)):    # go through all movies
                     if user_ratings[j] != 0:            # if a particular movie has been watched, compute cosine sim and add it * weight
                         sum += user_ratings[j] * self.similarity(unwatched_vector, user_ratings[j])
                 scores.append(sum)
-                    
-
 
             else:
-                scores.append(0)
+                scores.append(0)                        # now, we've built a list of size user_ratings w ratings for each movie
 
+        np.argsort(scores)
 
-
-        recommendations = []
+        indexes = scores[-k:]
+        for index in indexes:
+            recommendations.append(index)
 
         ########################################################################
         #                        END OF YOUR CODE                              #
