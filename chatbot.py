@@ -9,6 +9,7 @@ import numpy as np
 import shlex
 import math
 import re
+from porter_stemmer import PorterStemmer
 
 
 # noinspection PyMethodMayBeStatic
@@ -27,8 +28,9 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
+        self.edge_cases = {'enjoyed': 'enjoy', 'loved': 'love', 'hated': 'hate', 'liked': 'like', 'disliked': 'dislike', 'loving': 'love', 'loves': 'love', 'hates': 'hate', 'hating': 'hate', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'dislikes': 'dislike', 'disliking': 'dislike', 'likes': 'like', 'liking': 'like'}
 
-        sentiment = self.extract_sentiment(self.preprocess('I love "10 things I hate about you"'))
+        sentiment = self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))
         print(sentiment) 
 
         ########################################################################
@@ -114,7 +116,7 @@ class Chatbot:
         return response
 
     @staticmethod
-    def preprocess(text):
+    def preprocess(self, text):
         """Do any general-purpose pre-processing before extracting information
         from a line of text.
 
@@ -137,10 +139,19 @@ class Chatbot:
         # leave this method unmodified.                                        #
         ########################################################################
 
+        # This splits the text into a list of words, preserving quoted strings
+        splitter = shlex.split(text, posix=False)
+        
+        # This parses through the list of words and stems them, checking first for edge cases
+        for word in splitter:
+            if "\"" not in word and word in self.edge_cases:
+                text = text.replace(word, self.edge_cases[word])
+            elif "\"" not in word:
+                text = text.replace(word, PorterStemmer().stem(word, 0, len(word)-1))
+    
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
-
         return text
 
     def extract_titles(self, preprocessed_input):
@@ -212,12 +223,14 @@ class Chatbot:
         total_pos = 0
         total_neg = 0
 
+        index = 0
         for word in splitter:
             if "\"" not in word and word in self.sentiment:
                 if self.sentiment[word] == 'pos':
                     total_pos += 1
                 else:
                     total_neg += 1
+            index += 1
 
         if total_pos > total_neg:
             return 1
