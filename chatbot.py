@@ -395,7 +395,18 @@ class Chatbot:
         ########################################################################
 
         # Populate this list with k movie indices to recommend to the user.
+
+        # k movies to recommend 
+        # user_ratings and ratings_matrix both binarized
+        # exclude movies the user has already rated
+        # do not use self.ratings
         
+        # user_ratings - binarized 1D numpy array of user's movie ratings
+        # ratings_matrix - binarized 2D numpy matrix of all ratings, where ratings_matrix[i, j] is the rating for movie i by user j
+        # k - number of recommendations to generate
+        # creative - whether the chatbot is in creative mode
+
+
         recommendations = []
 
         ########################################################################
