@@ -6,6 +6,7 @@
 import util
 
 import numpy as np
+import shlex
 import math
 import re
 
@@ -26,7 +27,9 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
-        print(self.sentiment['dislike'])
+
+        sentiment = self.extract_sentiment(self.preprocess('I love "10 things I hate about you"'))
+        print(sentiment) 
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -205,9 +208,23 @@ class Chatbot:
         :returns: a numerical value for the sentiment of the text
         """
 
-        print(self.sentiment['dislike'])
+        splitter = shlex.split(preprocessed_input, posix=False)
+        total_pos = 0
+        total_neg = 0
 
-        return 0
+        for word in splitter:
+            if "\"" not in word and word in self.sentiment:
+                if self.sentiment[word] == 'pos':
+                    total_pos += 1
+                else:
+                    total_neg += 1
+
+        if total_pos > total_neg:
+            return 1
+        elif total_pos < total_neg:
+            return -1
+        else:
+            return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
