@@ -145,16 +145,21 @@ class Chatbot:
         splitter = shlex.split(text, posix=False)
         
         # This parses through the list of words and stems them, checking first for edge cases
+        index = 0
         for word in splitter:
             if "\"" not in word and word in self.edge_cases:
-                text = text.replace(word, self.edge_cases[word])
+                #text = text.replace(word, self.edge_cases[word])
+                splitter[index] = self.edge_cases[word]
             elif "\"" not in word:
-                text = text.replace(word, PorterStemmer().stem(word, 0, len(word)-1))
+                #text = text.replace(word, PorterStemmer().stem(word, 0, len(word)-1))
+                splitter[index] = PorterStemmer().stem(word, 0, len(word)-1)
     
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
-        return text
+
+        # to return a string, uncomment the lines in the loop and change the return statement to text
+        return splitter
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
@@ -225,14 +230,14 @@ class Chatbot:
         # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
         negators = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
 
-        splitter = shlex.split(preprocessed_input, posix=False)
+        #splitter = shlex.split(preprocessed_input, posix=False)
         total_pos = 0
         total_neg = 0
         last_word = 0
         negator_present = False
 
         index = 0
-        for word in splitter:
+        for word in preprocessed_input:
             if word in negators:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
