@@ -315,11 +315,15 @@ class Chatbot:
         # Loop through movie data
         for i in range(len(self.titles)):
             official_title = self.titles[i][0]
-            # Check if movie matches each entry
-            if official_title == reformatted_title: # Check if input is exact
+            # Check if input is exact
+            if reformatted_title == official_title:
                 ids.append(i)
-            elif official_title[len(official_title) - 6] == "(": # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
-                ids.append(i)
+            # Prune for all possible titles containing input substring
+            elif reformatted_title in official_title:
+                input_start_index = official_title.find(reformatted_title)
+                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
+                if official_title[input_start_index + len(reformatted_title) + 1] == "(":
+                        ids.append(i)
         return ids
 
     def extract_sentiment(self, preprocessed_input):
