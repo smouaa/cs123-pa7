@@ -18,6 +18,8 @@ import random
 class Chatbot:
     """Simple class to implement the chatbot for PA 6."""
 
+    edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like'}
+
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
@@ -31,19 +33,19 @@ class Chatbot:
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
-        self.edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like'}
+        
 
-        print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))) 
-        print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess(self, 'I hated "10 things I hate about you", but I loved it'))) 
-        print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess(self, '"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
-        print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was great at first, but I then hated it')))
-        print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" but thought nothing of it')))
-        print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
-        print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess(self, 'I did not like "Titanic (1997)"')))
-        print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess(self, "I didn't like \"Titanic (1997)\" at all")))
+        # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
+        # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
+        # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
+        # print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess('I thought "Titanic (1997)" was great at first, but I then hated it')))
+        # print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)" but thought nothing of it')))
+        # print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)". Hate love hated loved')))
+        # print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not like "Titanic (1997)"')))
+        # print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess("I didn't like \"Titanic (1997)\" at all")))
 
-        print(self.extract_titles(self.preprocess(self, 'I liked "The Notebook" a lot.')))
-        print('Titanic: ', self.find_movies_by_title('Titanic'))
+        # print(self.extract_titles(self.preprocess('I liked "The Notebook" a lot.')))
+        # print('Titanic: ', self.find_movies_by_title('Titanic'))
         
         # count number of movies that the user has rated
         self.movie_count = 0
@@ -187,7 +189,7 @@ class Chatbot:
         return response
 
     @staticmethod
-    def preprocess(self, text):
+    def preprocess(text):
         """Do any general-purpose pre-processing before extracting information
         from a line of text.
 
@@ -221,9 +223,9 @@ class Chatbot:
                 # Removes misc. punctuation and makes all words lowercase
                 word = word.translate(str.maketrans('', '', string.punctuation)).lower()
                 splitter[index] = word
-                if word in self.edge_cases:
+                if word in Chatbot.edge_cases:
                     #text = text.replace(word, self.edge_cases[word])
-                    splitter[index] = self.edge_cases[word]
+                    splitter[index] = Chatbot.edge_cases[word]
             
             # Removed Porter stemmer for now, since it was messing everything up
             # elif "\"" not in word:
@@ -341,7 +343,7 @@ class Chatbot:
         #print(preprocessed_input)
         negators = ['not', 'didnt', 'never', 'cant']
         negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
-
+        emphasizers = ['really', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
 
         total_pos = 0
         total_neg = 0
@@ -370,7 +372,8 @@ class Chatbot:
                         last_word = -1                    
 
             index += 1
-            prev_word = word
+            if word not in emphasizers:
+                prev_word = word
 
         #print("Total Positive: ", total_pos)
         #print("Total Negative: ", total_neg)
