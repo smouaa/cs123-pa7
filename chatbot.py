@@ -128,6 +128,8 @@ class Chatbot:
         #    response = "I processed {} in starter mode!!".format(line)
 
         ######################### PLACEHOLDER (if user corrects sentiment)
+        reponse = ""
+        
         if (self.movie_count < 5):
             input = Chatbot.preprocess(self, line)
             movies = Chatbot.extract_titles(self, input)
@@ -138,9 +140,14 @@ class Chatbot:
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
 
+            # if more than one movie found, ask the user to clarify
+            if (len(movie_indices) > 1):
+                return "I found more than one movie with that name. Can you specify the year in parentheses?"
+            
             # currently not configured to handle multiple movies
             for index in movie_indices:
                 sentiment = Chatbot.extract_sentiment(self, line)
+                print(sentiment)
                 self.user_ratings[index] = sentiment
 
             # if the user likes the movie
@@ -156,6 +163,8 @@ class Chatbot:
                                                "You don't like movies like {}, right? Tell me about a different movie, perhaps one that you like.".format(movies[0]),
                                                "{} wasn't a good movie, was it? What's your opinion on a different movie?".format(movies[0])]
                 response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
+            elif sentiment == 0:
+                return "I'm sorry, but I'm not sure if you like or dislike that movie. Tell me more about it."
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
@@ -355,9 +364,9 @@ class Chatbot:
             index += 1
             prev_word = word
 
-        # print("Total Positive: ", total_pos)
-        # print("Total Negative: ", total_neg)
-        # print("Negator Present: ", negator_present)
+        #print("Total Positive: ", total_pos)
+        #print("Total Negative: ", total_neg)
+        #print("Negator Present: ", negator_present)
 
         # if the total number of sentiment words is 1 or less, do basic processing
         if total_pos + total_neg < 2:
@@ -494,8 +503,8 @@ class Chatbot:
         # returns = binarized version of the matrix
 
         new_ratings = ratings
-        new_ratings[(new_ratings > threshold) & (new_ratings != 0)] = 1.0
-        new_ratings[(new_ratings <= threshold) & (new_ratings != 0)] = -1.0
+        new_ratings[(new_ratings > threshold) and (new_ratings != 0)] = 1.0
+        new_ratings[(new_ratings <= threshold) and (new_ratings != 0)] = -1.0
 
         binarized_ratings = new_ratings
 
