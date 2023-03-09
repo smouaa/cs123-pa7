@@ -33,6 +33,7 @@ class Chatbot:
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
+        #print(self.movies)
         
 
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
@@ -141,7 +142,6 @@ class Chatbot:
                 movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
-                print(movie_indices)
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
@@ -178,7 +178,6 @@ class Chatbot:
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
-            print(recommendations)
             recommended_movies = []
 
             for id in recommendations:
@@ -314,9 +313,13 @@ class Chatbot:
         else:
             reformatted_title = title
         # Loop through movie data
+        print(reformatted_title)
         for i in range(len(self.titles)):
+            official_title = self.titles[i][0]
             # Check if movie matches each entry
-            if reformatted_title == self.titles[i][0]:
+            if official_title == reformatted_title: # Check if input is exact
+                ids.append(i)
+            else if official_title[len(official_title) - 6] == "(" # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
                 ids.append(i)
         return ids
 
