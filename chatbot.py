@@ -180,7 +180,6 @@ class Chatbot:
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
-            print(recommendations)
             recommended_movies = []
 
             for id in recommendations:
