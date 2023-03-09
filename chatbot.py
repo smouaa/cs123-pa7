@@ -267,7 +267,12 @@ class Chatbot:
         titles = []
         for word in preprocessed_input:
             if word[0] == "\"":
+<<<<<<< Updated upstream
                 titles.append(word.replace('"', "")) # removes extra quotation marks)
+=======
+                word
+                titles.append(word)
+>>>>>>> Stashed changes
         return titles
 
     def find_movies_by_title(self, title):
@@ -294,6 +299,7 @@ class Chatbot:
         first_word_end_index = 0
         end_index = len(title) - 1
         reformatted_title = ""
+        regex_year = '([0-9]{4})'
 
         # Extract first word of title
         for char in title:
@@ -305,7 +311,7 @@ class Chatbot:
         # Reformat title as "Title Fragment, Article (Year)"
         if first_word.lower() in articles:
             # Article included, year not included
-            if title[end_index] != ")":
+            if bool(re.search(regex_year, title)):
                 reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
             # Article included, year included
             else:
@@ -315,7 +321,7 @@ class Chatbot:
         # Loop through movie data
         for i in range(len(self.titles)):
             # Check if movie matches each entry
-            if reformatted_title in self.titles[i][0]:
+            if reformatted_title == self.titles[i][0]:
                 ids.append(i)
         return ids
 
