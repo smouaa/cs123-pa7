@@ -123,7 +123,6 @@ class Chatbot:
         #    response = "I processed {} in starter mode!!".format(line)
 
         ######################### PLACEHOLDER (if user corrects sentiment)
-
         if (self.movie_count < 5):
             input = Chatbot.preprocess(self, line)
             movies = Chatbot.extract_titles(self, input)
@@ -266,10 +265,11 @@ class Chatbot:
         first_word_end_index = 0
         end_index = len(title) - 1
         # Extract first word of title
+        print(title)
         for char in title:
-            while char != " ":
-                first_word += char
-                first_word_end_index += 1
+            #while char != " ": <---- infinite loop
+            first_word += char
+            first_word_end_index += 1
         # Reformat title as "Title Fragment, Article (Year)"
         if first_word in articles:
             # Article included, year not included
