@@ -33,6 +33,8 @@ class Chatbot:
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
+        #print(self.movies)
+        print(self.titles)
         
 
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
@@ -544,8 +546,8 @@ class Chatbot:
         ########################################################################
 
         numerator = np.dot(u, v)
-        u_norm = 0 + 1e-8
-        v_norm = 0 + 1e-8
+        u_norm = 0 + 1e-30
+        v_norm = 0 + 1e-30
         
         for w in u:
             u_norm += w ** 2
@@ -629,6 +631,8 @@ class Chatbot:
         indexes = scores[-k:]
         for index in indexes:
             recommendations.append(index)
+        
+        recommendations.reverse()
 
         ########################################################################
         #                        END OF YOUR CODE                              #
