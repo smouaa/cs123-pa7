@@ -149,7 +149,7 @@ class Chatbot:
             movies = Chatbot.extract_titles(self, input)
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
-                return "Um... are you talking about a movie? Bert's only good at recommending movies. ╥﹏╥"
+                return "Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥"
             
             # currently assuming there is only one movie in the list
             for movie in movies:
@@ -159,14 +159,15 @@ class Chatbot:
                     self.movie_count += 1
                     self.prev_movies.append(movie)
                 else:
-                    return "You already talked about that movie! Bert's memory isn't that bad! (๑•̀д•́๑) Talk about a different movie!"
+                    return "You already mentioned that movie! Bert's memory isn't that bad! (๑•̀д•́๑) Talk about a different movie!!!"
 
-            # if more than one movie found, ask the user to clarify
+            # if more than one movie found, ask the user to clarify / if no movies are found
             if (len(movie_indices) > 1):
                 self.movie_count -= len(movies)
-                return "I found more than one movie with that name. Can you try specifying the year in parentheses or checking to see if it's spelled correctly?"
+                return "Bert found more than one movie with that name! ᕙ(  •̀ ᗜ •́  )ᕗ Bert wants you to put the year in parentheses after the title! Make sure the year is still within the quotation marks, though! (￣ー￣)ゞ"
             elif not movie_indices:
-                return "I'm sorry, I don't know that movie. I'm kinda old."
+                return "Oh... Bert doesn't know that movie. (T⌓T) Tell Bert about another movie, please..."
+            
             sentiment = 0
             
             # currently not configured to handle multiple movies
@@ -178,14 +179,14 @@ class Chatbot:
             if sentiment == 1:
                 possible_positive_responses = ["So you liked {}? That's one of Bert's favorite movies! ᕕ( ᐛ )ᕗ Tell Bert about another movie you've seen.".format(movies[0]),
                                       "Bert sees that you like {}! ∠( ᐛ 」∠)_ Please tell Bert about another movie.".format(movies[0]),
-                                      "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!.".format(movies[0]),
-                                      "{} was an enjoyable movie, wasn't it? Tell me about a different movie.".format(movies[0])]
+                                      "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!".format(movies[0]),
+                                      "{} was an enjoyable movie, wasn't it?!? Tell Bert about a different movie! +･.゜。(´∀｀)。゜.･+".format(movies[0])]
                 response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
             elif sentiment == -1:
-                possible_negative_responses = ["So you didn't like {}? Tell me your opinion on another movie, please.".format(movies[0]),
-                                               "I see that you didn't like {}? Tell me about a different movie.".format(movies[0]),
-                                               "You don't like movies like {}, right? Tell me about a different movie, perhaps one that you like.".format(movies[0]),
-                                               "{} wasn't a good movie, was it? What's your opinion on a different movie?".format(movies[0])]
+                possible_negative_responses = ["Oh no... you didn't like {}? Bert wants to know more about your taste in movies! (๑•﹏•)⋆* ⁑⋆*".format(movies[0]),
+                                               "Bert sees that you didn't like {}... ｡ﾟヽ(ﾟ´Д｀)ﾉﾟ｡ Tell Bert about a different movie!".format(movies[0]),
+                                               "You don't like movies like {}? Tell Bert about a different movie! Bert needs more information! ヽ(´□｀。)ﾉ".format(movies[0]),
+                                               "{} wasn't a good movie, was it? (Bert secretly agrees! ᕕ( ◔3◔)ᕗ) What's your opinion on a different movie?!?".format(movies[0])]
                 response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
             elif sentiment == 0:
                 self.movie_count -= 1
