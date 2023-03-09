@@ -37,7 +37,7 @@ class Chatbot:
         print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess(self, 'I hated "10 things I hate about you", but I loved it'))) 
         print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess(self, '"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
         print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was great at first, but I then hated it')))
-        print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
+        print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" but thought nothing of it')))
         print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
         print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess(self, 'I did not like "Titanic (1997)"')))
         print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess(self, "I didn't like \"Titanic (1997)\" at all")))
