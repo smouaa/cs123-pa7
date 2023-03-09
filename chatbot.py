@@ -292,7 +292,7 @@ class Chatbot:
         :returns: a list of indices of matching movies
         """
         ids = []
-        articles = ["a", "an", "the"]
+        articles = ["a", "an", "the", "le", "il", "la", "l'", "i", "le", "les", "un", "une", "des", "du", "el", "los", "las", "una", "unos", "unas"]
         first_word = ""
         first_word_end_index = 0
         end_index = len(title) - 1
@@ -320,7 +320,7 @@ class Chatbot:
         # Loop through movie data
         for i in range(len(self.titles)):
             official_title = self.titles[i][0].lower()
-            # Check if input is exact
+            # Check if input is exact (since it is unlikely that title is spelled incorrectly, assume this prunes inputs with inexact or nonexistent years)
             if reformatted_title == official_title:
                 ids.append(i)
             # Prune for all possible titles containing input substring
@@ -329,6 +329,9 @@ class Chatbot:
                 # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
                 if official_title[input_start_index + len(reformatted_title) + 1] == "(":
                     ids.append(i)
+                # Check for alternate title
+                if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                    ids.append()
         return ids
 
     def extract_sentiment(self, preprocessed_input):
