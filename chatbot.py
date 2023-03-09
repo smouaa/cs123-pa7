@@ -308,10 +308,12 @@ class Chatbot:
         if first_word.lower() in articles:
             # Article included, year not included
             if bool(re.search(regex_year, title)):
-                reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
+                #reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
+                reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
             # Article included, year included
             else:
-                reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
+                #reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
+                reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
         else:
             reformatted_title = title
         # Loop through movie data
