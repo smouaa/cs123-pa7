@@ -38,6 +38,11 @@ class Chatbot:
         print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
         print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
 
+        # create a 1-d array of user ratings
+        self.user_ratings = np.zeros(self.ratings.shape[0])
+        # count number of movies that the user has rated
+        self.movie_count = 0
+
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
         ########################################################################
@@ -110,10 +115,29 @@ class Chatbot:
         # directly based on how modular it is, we highly recommended writing   #
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
-        if self.creative:
-            response = "I processed {} in creative mode!!".format(line)
-        else:
-            response = "I processed {} in starter mode!!".format(line)
+        #if self.creative:
+        #    response = "I processed {} in creative mode!!".format(line)
+        #else:
+        #    response = "I processed {} in starter mode!!".format(line)
+
+        if (self.movie_count < 5):
+            movies = Chatbot.extract_titles(line)
+
+            # currently assuming there is only one movie in the list
+            for movie in movies:
+                movie_indices = Chatbot.find_movies_by_title(movie)
+                self.movie_count += 1
+
+            # currently not configured to handle multiple movies
+            for index in movie_indices:
+                sentiment = Chatbot.extract_sentiment(line)
+                self.user_ratings[index] = sentiment
+
+            # if the user likes the movie
+            if sentiment == 1:
+                response = "So you liked {}? Tell me about another movie you've seen.".format(movies[0])
+            elif sentiment == -1:
+                response = "So you didn't like {}? Tell me about another movie you've seen.".format(movies[0])
 
         ########################################################################
         #                          END OF YOUR CODE                            #
