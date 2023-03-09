@@ -76,7 +76,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert :3 Tell me about a movie you like or dislike. If possible, put the title of the movie in quotation marks."
+        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike. Put the title in quotation marks please! \nIt'll make Bert's life easier. (人・ェ・)"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -91,7 +91,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Goodbye!"
+        goodbye_message = "Bye bye! Bert hopes Bert was helpful. (｡•̀ᴗ-)✧"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -133,16 +133,19 @@ class Chatbot:
         #else:
         #    response = "I processed {} in starter mode!!".format(line)
 
-        ######################### PLACEHOLDER (if user corrects sentiment)
-        reponse = ""
+        ######################### PLACEHOLDER (if user corrects sentiment
         movies = []
         movies_indices = []
+
         if (self.movie_count < 5):
+            ########## creative mode: recognizing emotions ###########
+            #TO DOOOOOOOO
+            ######################
             input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
-                return "Um... are you talking about a movie? I want to talk about movies only."
+                return "Um... are you talking about a movie? Bert's only good at recommending movies. ╥﹏╥"
             
             # currently assuming there is only one movie in the list
             for movie in movies:
@@ -152,7 +155,7 @@ class Chatbot:
                     self.movie_count += 1
                     self.prev_movies.append(movie)
                 else:
-                    return "You already talked about that movie, bro. Talk about another one."
+                    return "You already talked about that movie! Bert's memory isn't that bad! (๑•̀д•́๑) Talk about a different movie!"
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
@@ -169,9 +172,9 @@ class Chatbot:
 
             # if the user likes the movie
             if sentiment == 1:
-                possible_positive_responses = ["So you liked {}? Tell me about another movie you've seen.".format(movies[0]),
-                                      "I see that you enjoyed watching {}. Please tell me about another movie.".format(movies[0]),
-                                      "You like movies like {}, correct? Tell me about another movie, please.".format(movies[0]),
+                possible_positive_responses = ["So you liked {}? That's one of Bert's favorite movies! ᕕ( ᐛ )ᕗ Tell Bert about another movie you've seen.".format(movies[0]),
+                                      "Bert sees that you like {}! ∠( ᐛ 」∠)_ Please tell Bert about another movie.".format(movies[0]),
+                                      "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!.".format(movies[0]),
                                       "{} was an enjoyable movie, wasn't it? Tell me about a different movie.".format(movies[0])]
                 response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
             elif sentiment == -1:
