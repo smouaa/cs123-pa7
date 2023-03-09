@@ -466,8 +466,8 @@ class Chatbot:
         # returns = binarized version of the matrix
 
         new_ratings = ratings
-        new_ratings[(new_ratings > threshold) & (new_ratings != 0)] = 1
-        new_ratings[(new_ratings <= threshold) & (new_ratings != 0)] = -1
+        new_ratings[(new_ratings > threshold) & (new_ratings != 0)] = 1.0
+        new_ratings[(new_ratings <= threshold) & (new_ratings != 0)] = -1.0
 
         binarized_ratings = new_ratings
 
