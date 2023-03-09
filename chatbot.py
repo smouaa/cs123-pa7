@@ -152,7 +152,7 @@ class Chatbot:
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self.user_ratings, Chatbot.binarize(self.ratings), creative=self.creative)
-
+            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommendations[:-1]])} and {recommendations[-1]}."
 
         ########################################################################
         #                          END OF YOUR CODE                            #
