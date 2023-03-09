@@ -142,7 +142,7 @@ class Chatbot:
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
-                return "I found more than one movie with that name. Can you specify the year in parentheses?"
+                return "I found more than one movie with that name. Can you try specifying the year in parentheses or checking to see if it's spelled correctly?"
             
             # currently not configured to handle multiple movies
             for index in movie_indices:
@@ -341,8 +341,7 @@ class Chatbot:
 
         index = 0
         prev_word = ""
-        for word in preprocessed_input:
-
+        for word in preprocessed_input: # <---- this is currently iterating through each char, not each word
             if word in negators_conj:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
