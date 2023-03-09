@@ -310,17 +310,24 @@ class Chatbot:
         if first_word.lower() in articles:
             # Article included, year not included
             if bool(re.search(regex_year, title)):
+<<<<<<< Updated upstream
                 #reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
                 reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
             # Article included, year included
             else:
                 #reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
+=======
+                reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
+            # Article included, year included
+            else:
+>>>>>>> Stashed changes
                 reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
         else:
-            reformatted_title = title
+            reformatted_title = title.lower()
+        reformatted_title = reformatted_title.lower()
         # Loop through movie data
         for i in range(len(self.titles)):
-            official_title = self.titles[i][0]
+            official_title = self.titles[i][0].lower()
             # Check if input is exact
             if reformatted_title == official_title:
                 ids.append(i)
@@ -329,7 +336,7 @@ class Chatbot:
                 input_start_index = official_title.find(reformatted_title)
                 # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
                 if official_title[input_start_index + len(reformatted_title) + 1] == "(":
-                        ids.append(i)
+                    ids.append(i)
         return ids
 
     def extract_sentiment(self, preprocessed_input):
