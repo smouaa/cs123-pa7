@@ -131,11 +131,14 @@ class Chatbot:
 
         ######################### PLACEHOLDER (if user corrects sentiment)
         reponse = ""
-
+        movies = []
         if (self.movie_count < 5):
             input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             
+            # if user doesn't talk about movies or if no movie titles are found
+            if not movies:
+                return "Um... are you talking about a movie? I want to talk about movies only."
             # currently assuming there is only one movie in the list
             for movie in movies:
                 movie = movie.replace('"', "") # removes extra quotation marks
