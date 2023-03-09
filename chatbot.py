@@ -72,7 +72,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "How can I help you?"
+        greeting_message = "Hi! I'm Bert. Tell me about a movie you like or dislike. If possible, put the title of the movie in quotation marks."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
