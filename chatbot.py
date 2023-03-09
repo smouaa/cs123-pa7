@@ -40,6 +40,7 @@ class Chatbot:
         print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
         print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
         print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess(self, 'I did not like "Titanic (1997)"')))
+        print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess(self, "I didn't like \"Titanic (1997)\" at all")))
 
         print(self.extract_titles(self.preprocess(self, 'I liked "The Notebook" a lot.')))
         print('Titanic: ', self.find_movies_by_title('Titanic'))
@@ -312,8 +313,10 @@ class Chatbot:
 
         # List of words that negate the sentiment of the phrase
         # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
-        #print(preprocessed_input)
-        negators = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
+        print(preprocessed_input)
+        negators = ['not', 'didnt', 'never', 'cant']
+        negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
+
 
         total_pos = 0
         total_neg = 0
@@ -324,23 +327,24 @@ class Chatbot:
         prev_word = ""
         for word in preprocessed_input:
 
-            if word in negators:
+            if word in negators_conj:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
-                if prev_word != "not":
+                if prev_word in negators:
                     if self.sentiment[word] == 'pos':
-                        total_pos += 1
-                        last_word = 1
-                    else:
                         total_neg += 1
                         last_word = -1
+                    else:
+                        total_pos += 1
+                        last_word = 1
                 else:
                     if self.sentiment[word] == 'pos':
-                        total_neg += 1
-                        last_word = -1
-                    else:
                         total_pos += 1
                         last_word = 1
+                    else:
+                        total_neg += 1
+                        last_word = -1                    
+
             index += 1
             prev_word = word
 
