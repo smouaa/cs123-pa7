@@ -36,6 +36,7 @@ class Chatbot:
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
+        self.prev_movies = []
         
 
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
@@ -75,7 +76,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert. Tell me about a movie you like or dislike. If possible, put the title of the movie in quotation marks."
+        greeting_message = "Hi! I'm Bert :3 Tell me about a movie you like or dislike. If possible, put the title of the movie in quotation marks."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -142,11 +143,16 @@ class Chatbot:
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
                 return "Um... are you talking about a movie? I want to talk about movies only."
+            
             # currently assuming there is only one movie in the list
             for movie in movies:
-                movie = movie.replace('"', "") # removes extra quotation marks
-                movie_indices = Chatbot.find_movies_by_title(self, movie)
-                self.movie_count += 1
+                if movie not in self.prev_movies:
+                    movie = movie.replace('"', "") # removes extra quotation marks
+                    movie_indices = Chatbot.find_movies_by_title(self, movie)
+                    self.movie_count += 1
+                    self.prev_movies.append(movie)
+                else:
+                    return "You already talked about that movie, bro. Talk about another one."
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
@@ -676,7 +682,7 @@ class Chatbot:
         instructions.
         Remember: in the starter mode, movie names will come in quotation marks
         and expressions of sentiment will be simple!
-        TODO: Write here the description for your own chatbot!
+        TODO: Bert needs at least 5 movies to get a solid understanding of what you like.
         """
 
 
