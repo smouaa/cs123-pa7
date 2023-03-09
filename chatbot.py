@@ -313,7 +313,6 @@ class Chatbot:
         else:
             reformatted_title = title
         # Loop through movie data
-        print(reformatted_title)
         for i in range(len(self.titles)):
             official_title = self.titles[i][0]
             # Check if movie matches each entry
