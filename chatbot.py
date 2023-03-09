@@ -313,13 +313,12 @@ class Chatbot:
         else:
             reformatted_title = title
         # Loop through movie data
-        print(reformatted_title)
         for i in range(len(self.titles)):
             official_title = self.titles[i][0]
             # Check if movie matches each entry
             if official_title == reformatted_title: # Check if input is exact
                 ids.append(i)
-            elif official_title[len(official_title) - 6] == "(" # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
+            elif official_title[len(official_title) - 6] == "(": # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
                 ids.append(i)
         return ids
 
