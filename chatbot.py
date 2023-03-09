@@ -5,11 +5,13 @@
 ######################################################################
 import util
 
+import sys, os
 import numpy as np
 import shlex
 import math
 import string
 import re
+from deps import nltk
 from porter_stemmer import PorterStemmer
 import random
 
