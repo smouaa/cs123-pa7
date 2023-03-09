@@ -11,7 +11,8 @@ import shlex
 import math
 import string
 import re
-from deps import nltk
+#from deps.nltk import nltk
+#from deps import nltk
 from porter_stemmer import PorterStemmer
 import random
 
