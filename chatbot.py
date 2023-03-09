@@ -175,7 +175,11 @@ class Chatbot:
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
-            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommendations[:-1]])} and {recommendations[-1]}."
+            recommended_movies = []
+
+            for id in recommendations:
+                recommended_movies.append(self.titles[id][0])
+            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommended_movies[:-1]])} and {recommended_movies[-1]}."
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -289,7 +293,6 @@ class Chatbot:
 
         # Extract first word of title
         for char in title:
-            #while char != " ": <---- infinite loop
             if char == " ":
                 break
             else:
@@ -310,7 +313,6 @@ class Chatbot:
             # Check if movie matches each entry
             if reformatted_title in self.titles[i][0]:
                 ids.append(i)
-
         return ids
 
     def extract_sentiment(self, preprocessed_input):
