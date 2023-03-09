@@ -30,6 +30,7 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
+        self.movies = util.load_titles('data/movies.txt')
         self.edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like'}
 
         print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess(self, 'I loved "10 things I hate about you"'))) 
@@ -38,7 +39,10 @@ class Chatbot:
         print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess(self, 'I thought "Titanic (1997)" was great at first, but I then hated it')))
         print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
         print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
+        print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess(self, 'I did not like "Titanic (1997)"')))
 
+        print(self.extract_titles(self.preprocess(self, 'I liked "The Notebook" a lot.')))
+        print('Titanic: ', self.find_movies_by_title('Titanic'))
         
         # count number of movies that the user has rated
         self.movie_count = 0
@@ -317,22 +321,32 @@ class Chatbot:
         negator_present = False
 
         index = 0
+        prev_word = ""
         for word in preprocessed_input:
 
             if word in negators:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
-                if self.sentiment[word] == 'pos':
-                    total_pos += 1
-                    last_word = 1
+                if prev_word != "not":
+                    if self.sentiment[word] == 'pos':
+                        total_pos += 1
+                        last_word = 1
+                    else:
+                        total_neg += 1
+                        last_word = -1
                 else:
-                    total_neg += 1
-                    last_word = -1
+                    if self.sentiment[word] == 'pos':
+                        total_neg += 1
+                        last_word = -1
+                    else:
+                        total_pos += 1
+                        last_word = 1
             index += 1
+            prev_word = word
 
-        print("Total Positive: ", total_pos)
-        print("Total Negative: ", total_neg)
-        print("Negator Present: ", negator_present)
+        # print("Total Positive: ", total_pos)
+        # print("Total Negative: ", total_neg)
+        # print("Negator Present: ", negator_present)
 
         # if the total number of sentiment words is 1 or less, do basic processing
         if total_pos + total_neg < 2:
