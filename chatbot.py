@@ -269,25 +269,32 @@ class Chatbot:
         first_word = ""
         first_word_end_index = 0
         end_index = len(title) - 1
+        reformatted_title = ""
+
         # Extract first word of title
-        print(title)
         for char in title:
             #while char != " ": <---- infinite loop
-            first_word += char
-            first_word_end_index += 1
+            if char == " ":
+                break
+            else:
+                first_word += char
+                first_word_end_index += 1
         # Reformat title as "Title Fragment, Article (Year)"
-        if first_word in articles:
+        if first_word.lower() in articles:
             # Article included, year not included
             if title[end_index] != ")":
-                title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
+                reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
             # Article included, year included
             else:
-                title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]\
+                reformatted_title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]
+        else:
+            reformatted_title = title
         # Loop through movie data
         for i in range(len(self.titles)):
             # Check if movie matches each entry
-            if title in self.titles[i][0].lower():
+            if reformatted_title in self.titles[i][0]:
                 ids.append(i)
+
         return ids
 
     def extract_sentiment(self, preprocessed_input):
