@@ -293,7 +293,6 @@ class Chatbot:
 
         # Extract first word of title
         for char in title:
-            #while char != " ": <---- infinite loop
             if char == " ":
                 break
             else:
@@ -314,7 +313,6 @@ class Chatbot:
             # Check if movie matches each entry
             if reformatted_title in self.titles[i][0]:
                 ids.append(i)
-
         return ids
 
     def extract_sentiment(self, preprocessed_input):
