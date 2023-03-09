@@ -129,7 +129,7 @@ class Chatbot:
 
         ######################### PLACEHOLDER (if user corrects sentiment)
         reponse = ""
-        
+
         if (self.movie_count < 5):
             input = Chatbot.preprocess(self, line)
             movies = Chatbot.extract_titles(self, input)
@@ -142,12 +142,18 @@ class Chatbot:
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
+                self.movie_count -= len(movies)
                 return "I found more than one movie with that name. Can you try specifying the year in parentheses or checking to see if it's spelled correctly?"
             
+            #process input
+            for i in range(len(input)):
+                if '"' in input[i]:
+                    del input[i]
+
+            sentiment = 0
             # currently not configured to handle multiple movies
             for index in movie_indices:
-                sentiment = Chatbot.extract_sentiment(self, line)
-                print(sentiment)
+                sentiment = Chatbot.extract_sentiment(self, input)
                 self.user_ratings[index] = sentiment
 
             # if the user likes the movie
@@ -164,6 +170,7 @@ class Chatbot:
                                                "{} wasn't a good movie, was it? What's your opinion on a different movie?".format(movies[0])]
                 response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
             elif sentiment == 0:
+                self.movie_count -= 1
                 return "I'm sorry, but I'm not sure if you like or dislike that movie. Tell me more about it."
 
         if (self.movie_count == 5):
