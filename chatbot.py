@@ -37,6 +37,8 @@ class Chatbot:
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
         self.prev_movies = []
+        self.recommended_movies = []
+        self.recommendations = []
         
         print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
@@ -141,10 +143,16 @@ class Chatbot:
         movies = []
         movies_indices = []
 
+        # building up user matrix of movies
         if (self.movie_count < 5):
             ########## creative mode: recognizing emotions ###########
             #TO DOOOOOOOO
             ######################
+
+            #################
+            #TO DO: FIXING A WRONG SENTIMENT ANALYSIS
+            ####################
+
             input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             # if user doesn't talk about movies or if no movie titles are found
@@ -166,13 +174,15 @@ class Chatbot:
                 self.movie_count -= len(movies)
                 return "Bert found more than one movie with that name! ᕙ(  •̀ ᗜ •́  )ᕗ Bert wants you to put the year in parentheses after the title! Make sure the year is still within the quotation marks, though! (￣ー￣)ゞ"
             elif not movie_indices:
-                return "Oh... Bert doesn't know that movie. (T⌓T) Tell Bert about another movie, please..."
+                return "Oh... Bert doesn't know that movie. (T⌓T) Tell Bert about a different movie, please..."
             
             sentiment = 0
             
             # currently not configured to handle multiple movies
             for index in movie_indices:
                 sentiment = Chatbot.extract_sentiment(self, input)
+                if sentiment == 0:
+                    self.prev_movies.pop()
                 self.user_ratings[index] = sentiment
 
             # if the user likes the movie
@@ -180,27 +190,41 @@ class Chatbot:
                 possible_positive_responses = ["So you liked {}? That's one of Bert's favorite movies! ᕕ( ᐛ )ᕗ Tell Bert about another movie you've seen.".format(movies[0]),
                                       "Bert sees that you like {}! ∠( ᐛ 」∠)_ Please tell Bert about another movie.".format(movies[0]),
                                       "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!".format(movies[0]),
-                                      "{} was an enjoyable movie, wasn't it?!? Tell Bert about a different movie! +･.゜。(´∀｀)。゜.･+".format(movies[0])]
+                                      "{} was an enjoyable movie, wasn't it?!? Tell Bert about a different movie! +･.゜。(´∀｀)。゜.･+".format(movies[0]),
+                                      "Bert also thinks {} was a good movie!!! Bert wants to know more about your taste in movies!!! (〜￣▽￣)〜".format(movies[0])]
                 response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
             elif sentiment == -1:
                 possible_negative_responses = ["Oh no... you didn't like {}? Bert wants to know more about your taste in movies! (๑•﹏•)⋆* ⁑⋆*".format(movies[0]),
                                                "Bert sees that you didn't like {}... ｡ﾟヽ(ﾟ´Д｀)ﾉﾟ｡ Tell Bert about a different movie!".format(movies[0]),
                                                "You don't like movies like {}? Tell Bert about a different movie! Bert needs more information! ヽ(´□｀。)ﾉ".format(movies[0]),
-                                               "{} wasn't a good movie, was it? (Bert secretly agrees! ᕕ( ◔3◔)ᕗ) What's your opinion on a different movie?!?".format(movies[0])]
+                                               "{} wasn't a good movie, was it? (Bert secretly agrees! ᕕ( ◔3◔)ᕗ) What's your opinion on a different movie?!?".format(movies[0]),
+                                               "Bert thinks you don't like {}, is that right?!? ( ✧≖ ͜ʖ≖) Bert is curious about what you think about other movies!!!".format(movies[0])]
                 response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
             elif sentiment == 0:
                 self.movie_count -= 1
-                return "I'm sorry, but I'm not sure if you like or dislike that movie. Tell me more about it."
+                return "Bert is sorry... Bert doesn't know if you like or dislike that movie... ｡･ﾟﾟ･(>д<)･ﾟﾟ･｡ Tell Bert more about it!!!"
 
+        # if user has inputted a sufficient of movies they like or dislike
         if (self.movie_count == 5):
-            recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
-            recommended_movies = []
+            
+            self.recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
 
-            for id in recommendations:
-                recommended_movies.append(self.titles[id][0])
-            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommended_movies[:-1]])} and {recommended_movies[-1]}. If you'd like more recommendations, tell me about more movies."
-            self.user_ratings = np.zeros(self.ratings.shape[0])
-            self.movie_count = 0
+            for id in self.recommendations:
+                self.recommended_movies.append(self.titles[id][0])
+
+            response = "Bert thinks you'll like {}!".format(self.recommended_movies.pop(0))
+
+            # reset global variables
+            if len(self.recommended_movies) == 0:
+                response += " This is Bert's last recommendation! Type :quit to quit or enter more movies for more recommendations!"
+                self.user_ratings = np.zeros(self.ratings.shape[0])
+                self.prev_movies.clear()
+                self.movie_count = 0
+                movies.clear()
+                movie_indices.clear()
+                self.recommendations.clear()
+            else:
+                response += " Would you like another recommendation? Otherwise, type :quit to quit!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
