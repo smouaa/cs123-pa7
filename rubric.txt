@@ -22,13 +22,15 @@ FEATURE - Communicating sentiments and movies extracted to the user given multip
 FEATURE - Responding to arbitrary input: NO
 FEATURE - Identifying and responding to emotions: NO
 FEATURE - Chatbot theme/persona: NO
-Did not implement any of the above features: NO
+Did not implement any of the above features: YES
 
 #########################################################################################
 # Team Contributions                                                                    #
 #########################################################################################
-TODO: Please write a short description of what each team member contributed!
-
+Katie - 
+Sheng - 
+Albert - 
+Stella - 
 
 #########################################################################################
 # Ethics Question                                                                  #
