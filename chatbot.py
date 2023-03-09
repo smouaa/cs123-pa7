@@ -320,7 +320,7 @@ class Chatbot:
 
         # List of words that negate the sentiment of the phrase
         # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
-        print(preprocessed_input)
+        #print(preprocessed_input)
         negators = ['not', 'didnt', 'never', 'cant']
         negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
 
