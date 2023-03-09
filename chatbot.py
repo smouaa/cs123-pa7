@@ -542,8 +542,8 @@ class Chatbot:
         ########################################################################
 
         numerator = np.dot(u, v)
-        u_norm = 0 + 1e-8
-        v_norm = 0 + 1e-8
+        u_norm = 0 + 1e-30
+        v_norm = 0 + 1e-30
         
         for w in u:
             u_norm += w ** 2
@@ -627,6 +627,8 @@ class Chatbot:
         indexes = scores[-k:]
         for index in indexes:
             recommendations.append(index)
+        
+        recommendations.reverse()
 
         ########################################################################
         #                        END OF YOUR CODE                              #
