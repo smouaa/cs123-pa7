@@ -34,7 +34,6 @@ class Chatbot:
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
         #print(self.movies)
-        print(self.titles)
         
 
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
@@ -143,7 +142,6 @@ class Chatbot:
                 movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
-                print(movie_indices)
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
