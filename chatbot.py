@@ -35,7 +35,6 @@ class Chatbot:
         self.titles, ratings = util.load_ratings('data/ratings.txt')
         self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
         self.movies = util.load_titles('data/movies.txt')
-        #print(self.movies)
         
 
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
@@ -75,7 +74,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "How can I help you?"
+        greeting_message = "Hi! I'm Bert. Tell me about a movie you like or dislike. If possible, put the title of the movie in quotation marks."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -134,11 +133,14 @@ class Chatbot:
 
         ######################### PLACEHOLDER (if user corrects sentiment)
         reponse = ""
-
+        movies = []
         if (self.movie_count < 5):
             input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             
+            # if user doesn't talk about movies or if no movie titles are found
+            if not movies:
+                return "Um... are you talking about a movie? I want to talk about movies only."
             # currently assuming there is only one movie in the list
             for movie in movies:
                 movie = movie.replace('"', "") # removes extra quotation marks
@@ -317,11 +319,15 @@ class Chatbot:
         # Loop through movie data
         for i in range(len(self.titles)):
             official_title = self.titles[i][0]
-            # Check if movie matches each entry
-            if official_title == reformatted_title: # Check if input is exact
+            # Check if input is exact
+            if reformatted_title == official_title:
                 ids.append(i)
-            elif official_title[len(official_title) - 6] == "(": # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
-                ids.append(i)
+            # Prune for all possible titles containing input substring
+            elif reformatted_title in official_title:
+                input_start_index = official_title.find(reformatted_title)
+                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
+                if official_title[input_start_index + len(reformatted_title) + 1] == "(":
+                        ids.append(i)
         return ids
 
     def extract_sentiment(self, preprocessed_input):
