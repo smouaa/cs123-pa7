@@ -267,12 +267,7 @@ class Chatbot:
         titles = []
         for word in preprocessed_input:
             if word[0] == "\"":
-<<<<<<< Updated upstream
                 titles.append(word.replace('"', "")) # removes extra quotation marks)
-=======
-                word
-                titles.append(word)
->>>>>>> Stashed changes
         return titles
 
     def find_movies_by_title(self, title):
