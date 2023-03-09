@@ -39,6 +39,8 @@ class Chatbot:
         self.prev_movies = []
         self.recommended_movies = []
         self.recommendations = []
+        self.movie_count = 0
+        self.num_recs_given = 0
         
         print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
@@ -58,7 +60,7 @@ class Chatbot:
         # print('Titanic: ', self.find_movies_by_title('Titanic'))
         
         # count number of movies that the user has rated
-        self.movie_count = 0
+        
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -141,7 +143,7 @@ class Chatbot:
 
         ######################### PLACEHOLDER (if user corrects sentiment
         movies = []
-        movies_indices = []
+        movie_indices = []
 
         # building up user matrix of movies
         if (self.movie_count < 5):
@@ -207,24 +209,28 @@ class Chatbot:
         # if user has inputted a sufficient of movies they like or dislike
         if (self.movie_count == 5):
             
-            self.recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
+            if self.num_recs_given == 0:
+                self.recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
 
-            for id in self.recommendations:
-                self.recommended_movies.append(self.titles[id][0])
+                for id in self.recommendations:
+                    self.recommended_movies.append(self.titles[id][0])
 
-            response = "Bert thinks you'll like {}!".format(self.recommended_movies.pop(0))
+            #response = "Bert thinks you'll like {}!".format(self.recommended_movies.pop(0))
 
             # reset global variables
-            if len(self.recommended_movies) == 0:
-                response += " This is Bert's last recommendation! Type :quit to quit or enter more movies for more recommendations!"
+            if self.num_recs_given == (len(self.recommendations) - 1):
+                response = " This is Bert's last recommendation! Bert really thinks you'll like {}! Type :quit to quit or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
                 self.user_ratings = np.zeros(self.ratings.shape[0])
                 self.prev_movies.clear()
                 self.movie_count = 0
                 movies.clear()
                 movie_indices.clear()
                 self.recommendations.clear()
+                self.num_recs_given = 0
+                self.recommended_movies.clear()
             else:
-                response += " Would you like another recommendation? Otherwise, type :quit to quit!"
+                response = "Bert thinks you'll like {}! Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                self.num_recs_given += 1
 
         ########################################################################
         #                          END OF YOUR CODE                            #
