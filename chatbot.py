@@ -127,10 +127,12 @@ class Chatbot:
         if (self.movie_count < 5):
             input = Chatbot.preprocess(self, line)
             movies = Chatbot.extract_titles(self, input)
-
+            
             # currently assuming there is only one movie in the list
             for movie in movies:
+                movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
+                print(movie_indices)
                 self.movie_count += 1
 
             # currently not configured to handle multiple movies
@@ -140,23 +142,22 @@ class Chatbot:
 
             # if the user likes the movie
             if sentiment == 1:
-                possible_positive_responses = ["So you liked {}? Tell me about another movie you've seen.",
-                                      "I see that you enjoyed watching {}. Please tell me about another movie.",
-                                      "You like movies like {}, correct? Tell me about another movie, please.",
-                                      "{} was an enjoyable movie, wasn't it? Tell me about a different movie."]
-                response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)].format(movies[0])
+                possible_positive_responses = ["So you liked {}? Tell me about another movie you've seen.".format(movies[0]),
+                                      "I see that you enjoyed watching {}. Please tell me about another movie.".format(movies[0]),
+                                      "You like movies like {}, correct? Tell me about another movie, please.".format(movies[0]),
+                                      "{} was an enjoyable movie, wasn't it? Tell me about a different movie.".format(movies[0])]
+                response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
             elif sentiment == -1:
-                possible_negative_responses = ["So you didn't like {}? Tell me your opinion on another movie, please.",
-                                               "I see that you didn't like {}? Tell me about a different movie.",
-                                               "You don't like movies like {}, right? Tell me about a different movie, perhaps one that you like.",
-                                               "{} wasn't a good movie, was it? What's your opinion on a different movie?"]
-                response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)].format(movies[0])
+                possible_negative_responses = ["So you didn't like {}? Tell me your opinion on another movie, please.".format(movies[0]),
+                                               "I see that you didn't like {}? Tell me about a different movie.".format(movies[0]),
+                                               "You don't like movies like {}, right? Tell me about a different movie, perhaps one that you like.".format(movies[0]),
+                                               "{} wasn't a good movie, was it? What's your opinion on a different movie?".format(movies[0])]
+                response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
 
         if (self.movie_count == 5):
-            recommendations = Chatbot.recommend(self, self.user_ratings, Chatbot.binarize(self.ratings), creative=self.creative)
+            recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
             response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommendations[:-1]])} and {recommendations[-1]}."
 
-        print(response)
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
