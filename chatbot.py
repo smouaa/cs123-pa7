@@ -541,8 +541,8 @@ class Chatbot:
         ########################################################################
 
         numerator = np.dot(u, v)
-        u_norm = 0
-        v_norm = 0
+        u_norm = 0 + 1e-8
+        v_norm = 0 + 1e-8
         
         for w in u:
             u_norm += w ** 2
