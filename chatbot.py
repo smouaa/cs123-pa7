@@ -39,8 +39,7 @@ class Chatbot:
         print('I watched "Titanic (1997)" and thought nothing of it: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)" and thought nothing of it')))
         print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess(self, 'I watched "Titanic (1997)". Hate love hated loved')))
 
-        # create a 1-d array of user ratings
-        self.user_ratings = np.zeros(self.ratings.shape[0])
+        
         # count number of movies that the user has rated
         self.movie_count = 0
 
@@ -49,7 +48,9 @@ class Chatbot:
         ########################################################################
 
         # Binarize the movie ratings before storing the binarized matrix.
-        self.ratings = ratings
+        self.ratings = Chatbot.binarize(ratings)
+        # create a 1-d array of user ratings
+        self.user_ratings = np.zeros(ratings.shape[0])
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -124,16 +125,17 @@ class Chatbot:
         ######################### PLACEHOLDER (if user corrects sentiment)
 
         if (self.movie_count < 5):
-            movies = Chatbot.extract_titles(line)
+            input = Chatbot.preprocess(self, line)
+            movies = Chatbot.extract_titles(self, input)
 
             # currently assuming there is only one movie in the list
             for movie in movies:
-                movie_indices = Chatbot.find_movies_by_title(movie)
+                movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
 
             # currently not configured to handle multiple movies
             for index in movie_indices:
-                sentiment = Chatbot.extract_sentiment(line)
+                sentiment = Chatbot.extract_sentiment(self, line)
                 self.user_ratings[index] = sentiment
 
             # if the user likes the movie
@@ -142,18 +144,19 @@ class Chatbot:
                                       "I see that you enjoyed watching {}. Please tell me about another movie.",
                                       "You like movies like {}, correct? Tell me about another movie, please.",
                                       "{} was an enjoyable movie, wasn't it? Tell me about a different movie."]
-                response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
+                response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)].format(movies[0])
             elif sentiment == -1:
                 possible_negative_responses = ["So you didn't like {}? Tell me your opinion on another movie, please.",
                                                "I see that you didn't like {}? Tell me about a different movie.",
                                                "You don't like movies like {}, right? Tell me about a different movie, perhaps one that you like.",
                                                "{} wasn't a good movie, was it? What's your opinion on a different movie?"]
-                response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
+                response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)].format(movies[0])
 
         if (self.movie_count == 5):
-            recommendations = Chatbot.recommend(self.user_ratings, Chatbot.binarize(self.ratings), creative=self.creative)
+            recommendations = Chatbot.recommend(self, self.user_ratings, Chatbot.binarize(self.ratings), creative=self.creative)
             response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommendations[:-1]])} and {recommendations[-1]}."
 
+        print(response)
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
