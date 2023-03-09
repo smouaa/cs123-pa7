@@ -133,7 +133,7 @@ class Chatbot:
         reponse = ""
 
         if (self.movie_count < 5):
-            input = Chatbot.preprocess(self, line)
+            input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             
             # currently assuming there is only one movie in the list
@@ -141,6 +141,7 @@ class Chatbot:
                 movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
+                print(movie_indices)
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
