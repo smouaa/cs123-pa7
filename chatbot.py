@@ -177,6 +177,7 @@ class Chatbot:
 
         if (self.movie_count == 5):
             recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
+            print(recommendations)
             recommended_movies = []
 
             for id in recommendations:
@@ -621,7 +622,7 @@ class Chatbot:
             else:
                 scores.append(0)                        # now, we've built a list of size user_ratings w ratings for each movie
 
-        np.argsort(scores)
+        scores = np.argsort(scores)
 
         indexes = scores[-k:]
         for index in indexes:
