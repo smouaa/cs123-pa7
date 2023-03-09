@@ -233,7 +233,11 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """
-        return []
+        titles = []
+        for word in preprocessed_input:
+            if word[0] == "\"":
+                titles.append(word)
+        return titles
 
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
@@ -253,7 +257,30 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-        return []
+        ids = []
+        articles = ["a", "an", "the"]
+        first_word = ""
+        first_word_end_index = 0
+        end_index = len(title) - 1
+        # Extract first word of title
+        for char in title:
+            while char != " ":
+                first_word += char
+                first_word_end_index += 1
+        # Reformat title as "Title Fragment, Article (Year)"
+        if first_word in articles:
+            # Article included, year not included
+            if title[end_index] != ")":
+                title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
+            # Article included, year included
+            else:
+                title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]\
+        # Loop through movie data
+        for i in range(len(self.movies)):
+            # Check if movie matches each entry
+            if title in self.movies[i][0].lower():
+                ids.append(i)
+        return ids
 
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
