@@ -132,7 +132,6 @@ class Chatbot:
             for movie in movies:
                 movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
-                print(movie_indices)
                 self.movie_count += 1
 
             # currently not configured to handle multiple movies
@@ -280,9 +279,9 @@ class Chatbot:
             else:
                 title = title[first_word_end_index + 1:end_index - 6] + ", " + first_word + title[end_index - 6:end_index + 1]\
         # Loop through movie data
-        for i in range(len(self.movies)):
+        for i in range(len(self.titles)):
             # Check if movie matches each entry
-            if title in self.movies[i][0].lower():
+            if title in self.titles[i][0].lower():
                 ids.append(i)
         return ids
 
