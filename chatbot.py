@@ -134,10 +134,10 @@ class Chatbot:
         ######################### PLACEHOLDER (if user corrects sentiment)
         reponse = ""
         movies = []
+        movies_indices = []
         if (self.movie_count < 5):
             input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
-            
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
                 return "Um... are you talking about a movie? I want to talk about movies only."
@@ -151,13 +151,10 @@ class Chatbot:
             if (len(movie_indices) > 1):
                 self.movie_count -= len(movies)
                 return "I found more than one movie with that name. Can you try specifying the year in parentheses or checking to see if it's spelled correctly?"
-            
-            #process input
-            for i in range(len(input)):
-                if '"' in input[i]:
-                    del input[i]
-
+            elif not movie_indices:
+                return "I'm sorry, I don't know that movie. I'm kinda old."
             sentiment = 0
+            
             # currently not configured to handle multiple movies
             for index in movie_indices:
                 sentiment = Chatbot.extract_sentiment(self, input)
@@ -186,7 +183,9 @@ class Chatbot:
 
             for id in recommendations:
                 recommended_movies.append(self.titles[id][0])
-            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommended_movies[:-1]])} and {recommended_movies[-1]}."
+            response = f"Here is a list of movies I think you'll like: {', '.join([item for item in recommended_movies[:-1]])} and {recommended_movies[-1]}. If you'd like more recommendations, tell me about more movies."
+            self.user_ratings = np.zeros(self.ratings.shape[0])
+            self.movie_count = 0
 
         ########################################################################
         #                          END OF YOUR CODE                            #
