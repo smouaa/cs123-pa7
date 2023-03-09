@@ -135,7 +135,7 @@ class Chatbot:
         reponse = ""
 
         if (self.movie_count < 5):
-            input = Chatbot.preprocess(self, line)
+            input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
             
             # currently assuming there is only one movie in the list
@@ -143,6 +143,7 @@ class Chatbot:
                 movie = movie.replace('"', "") # removes extra quotation marks
                 movie_indices = Chatbot.find_movies_by_title(self, movie)
                 self.movie_count += 1
+                print(movie_indices)
 
             # if more than one movie found, ask the user to clarify
             if (len(movie_indices) > 1):
@@ -295,6 +296,7 @@ class Chatbot:
         first_word_end_index = 0
         end_index = len(title) - 1
         reformatted_title = ""
+        regex_year = '([0-9]{4})'
 
         # Extract first word of title
         for char in title:
@@ -306,7 +308,7 @@ class Chatbot:
         # Reformat title as "Title Fragment, Article (Year)"
         if first_word.lower() in articles:
             # Article included, year not included
-            if title[end_index] != ")":
+            if bool(re.search(regex_year, title)):
                 reformatted_title = title[first_word_end_index + 1:end_index + 1] + ", " + first_word
             # Article included, year included
             else:
@@ -316,7 +318,7 @@ class Chatbot:
         # Loop through movie data
         for i in range(len(self.titles)):
             # Check if movie matches each entry
-            if reformatted_title in self.titles[i][0]:
+            if reformatted_title == self.titles[i][0]:
                 ids.append(i)
         return ids
 
@@ -544,8 +546,8 @@ class Chatbot:
         ########################################################################
 
         numerator = np.dot(u, v)
-        u_norm = 0 + 1e-8
-        v_norm = 0 + 1e-8
+        u_norm = 0 + 1e-30
+        v_norm = 0 + 1e-30
         
         for w in u:
             u_norm += w ** 2
@@ -629,6 +631,8 @@ class Chatbot:
         indexes = scores[-k:]
         for index in indexes:
             recommendations.append(index)
+        
+        recommendations.reverse()
 
         ########################################################################
         #                        END OF YOUR CODE                              #
