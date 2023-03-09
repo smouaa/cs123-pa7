@@ -593,7 +593,7 @@ class Chatbot:
                 sum = 0
                 for j in range(len(ratings_matrix)):    # go through all movies
                     if user_ratings[j] != 0:            # if a particular movie has been watched, compute cosine sim and add it * weight
-                        sum += user_ratings[j] * self.similarity(unwatched_vector, user_ratings[j])
+                        sum += user_ratings[j] * self.similarity(unwatched_vector, ratings_matrix[j])
                 scores.append(sum)
 
             else:
