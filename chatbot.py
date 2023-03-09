@@ -337,7 +337,7 @@ class Chatbot:
                     ids.append(i)
                 # Check for alternate title
                 if official_title[input_start_index + len(reformatted_title) + 2] == "(":
-                    ids.append()
+                    ids.append(i)
         return ids
 
     def extract_sentiment(self, preprocessed_input):
