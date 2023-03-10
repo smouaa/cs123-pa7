@@ -902,12 +902,11 @@ class Chatbot:
         Consider adding to this description any information about what your
         chatbot can do and how the user can interact with it.
         """
-        return "Bert is a movie recommender bot who can give you movie recommendations based \non your personal taste. After you talk about 5 movies (at minimum), Bert will start giving you movie recommendations. \nMake sure to include the title of the movie in quotes."
-        """
-        Your task is to implement the chatbot as detailed in the PA7
-        instructions.
-        Remember: in the starter mode, movie names will come in quotation marks
-        and expressions of sentiment will be simple!
+        return """
+        Bert is a movie recommender bot who can give you movie recommendations based on your personal taste. After you 
+        talk about 5 movies (at minimum), Bert will start giving you movie recommendations. 
+        Make sure to include the title of the movie in quotes. If you need to correct Bert's evaluation of your opinion of
+        a movie, you can do so.
         """
 
 
