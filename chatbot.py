@@ -44,7 +44,7 @@ class Chatbot:
         self.num_recs_given = 0
 
         #print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
-        
+        print(self.disambiguate("1997", [1359, 2716]))
         #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
         #print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
@@ -759,7 +759,32 @@ class Chatbot:
         :returns: a list of indices corresponding to the movies identified by
         the clarification
         """
-        pass
+        # clarification = string of user input
+        # candidates = list of candidate indices
+
+        disambiguation = []
+
+        year = re.compile("[0-9]{4}")
+        index = re.compile("[0-9]{2}")
+        
+        if year.match(clarification) == True:
+            for c in candidates:
+                title = self.titles[c][0]
+                if clarification in title:
+                    disambiguation.append(c)
+
+        elif index.match(clarification) == True:
+            disambiguation.append(candidates[clarification])
+
+        else:
+            for c in candidates:
+                title = self.titles[c][0]
+                if clarification in title:
+                    disambiguation.append(c)
+
+        return disambiguation
+
+
 
     ############################################################################
     # 3. Movie Recommendation helper functions                                 #
