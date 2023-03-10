@@ -522,6 +522,28 @@ class Chatbot:
         """
         pass
 
+    def editDistance(str1, str2, m, n):
+ 
+        # if first string is empty, we can only insert all characters of second string into first
+        if m == 0:
+            return n
+    
+        # if second string is empty, we can only remove all characters of first string
+        if n == 0:
+            return m
+    
+        # if last chars equal, nothing needed. disregard last chars, recurse thru other strs
+        if str1[m-1] == str2[n-1]:
+            return editDistance(str1, str2, m-1, n-1)
+    
+        # if last chars different, consider all three operations on last character of first string, recursively
+
+        return min((1 + editDistance(str1, str2, m, n-1)),    # insertion                   
+    			(1 + editDistance(str1, str2, m-1, n)),       # deletion
+                (2 + editDistance(str1, str2, m-1, n-1)),     # substitution
+            )
+
+
     def find_movies_closest_to_title(self, title, max_distance=3):
         """Creative Feature: Given a potentially misspelled movie title,
         return a list of the movies in the dataset whose titles have the least
@@ -546,7 +568,19 @@ class Chatbot:
         and within edit distance max_distance
         """
 
-        pass
+        # input = potentially misspelled title
+        # output = list of movies in dataset whose titles have least edit distance from provided title, edit distance up to max distance
+
+        # if no movies have titles within max_dist of the provided title, return empty
+        # if there's a movie closer in edit distance to the given title than all other movies, return 1-elem list
+        # if there is a tie, retuen all indices
+
+        for title in self.titles:
+        closest = []
+
+
+        return closest
+
 
     def disambiguate(self, clarification, candidates):
         """Creative Feature: Given a list of movies that the user could be
