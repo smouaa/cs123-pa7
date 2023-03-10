@@ -397,7 +397,7 @@ class Chatbot:
                 input_start_index = official_title.find(reformatted_title)
                 if self.creative:
                     # Disambiguation 1: prune "Screams" but not "Scream 2"
-                    if !official_title[input_start_index + len(reformatted_title)].isalnum():
+                    if not official_title[input_start_index + len(reformatted_title)].isalnum():
                             ids.append(i)
                     # Alternate title: match "Se7en"
                     if official_title[input_start_index + len(reformatted_title) + 2] == "(":
