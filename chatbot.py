@@ -42,11 +42,13 @@ class Chatbot:
         self.recommendations = []
         self.movie_count = 0
         self.num_recs_given = 0
+
+        print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
         
-        print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
-        print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
-        print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
-        print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
+        #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
+        #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
+        #print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
+        #print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
         #print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
         # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
@@ -539,7 +541,7 @@ class Chatbot:
         """
         pass
 
-    def editDistance(self, str1, str2, m, n):
+    def edit_distance(self, str1, str2, m, n):
  
         # if first string is empty, we can only insert all characters of second string into first
         if m == 0:
@@ -551,13 +553,13 @@ class Chatbot:
     
         # if last chars equal, nothing needed. disregard last chars, recurse thru other strs
         if str1[m-1] == str2[n-1]:
-            return self.editDistance(str1, str2, m-1, n-1)
+            return self.edit_distance(str1, str2, m-1, n-1)
     
         # if last chars different, consider all three operations on last character of first string, recursively
-        return min((1 + self.editDistance(str1, str2, m, n-1)),    # insertion                   
-    			(1 + self.editDistance(str1, str2, m-1, n)),       # deletion
-                (2 + self.editDistance(str1, str2, m-1, n-1)),     # substitution
-            )
+        return min((1 + self.edit_distance(str1, str2, m, n-1)),    # insertion                   
+    			   (1 + self.edit_distance(str1, str2, m-1, n)),       # deletion
+                   (2 + self.edit_distance(str1, str2, m-1, n-1))     # substitution
+                   )
 
 
     def find_movies_closest_to_title(self, title, max_distance=3):
@@ -593,13 +595,17 @@ class Chatbot:
 
         closest = []  # numpy.argmax
 
+        regex = '([0-9]{4})'
         distances = []
-        for choice in self.titles:
-            distances.append(self.editDistance(title, choice, len(title), len(choice)))    # distance to indices
+        for t in self.titles:
+            index = t[0].find("(")
+            choice = t[0][:index]
+            distances.append(self.edit_distance(title, choice, len(title), len(choice)))    # distance to indices
+        
+        minimum = min(distances)
 
-        min = min(distances)
-        for i in range in len(self.titles):
-            if self.titles[i] == min:
+        for i in range(len(distances)):
+            if distances[i] == minimum:
                 closest.append(i)
 
         return closest
