@@ -19,10 +19,10 @@ FEATURE - Disambiguation (part 2): NO
 FEATURE - Dialogue for spell-checking: NO
 FEATURE - Dialogue for disambiguation: NO
 FEATURE - Communicating sentiments and movies extracted to the user given multiple-movie input: NO
-FEATURE - Responding to arbitrary input: NO
+FEATURE - Responding to arbitrary input: YES
 FEATURE - Identifying and responding to emotions: NO
-FEATURE - Chatbot theme/persona: NO
-Did not implement any of the above features: YES
+FEATURE - Chatbot theme/persona: YES
+Did not implement any of the above features: NO
 
 #########################################################################################
 # Team Contributions                                                                    #
