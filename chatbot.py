@@ -154,6 +154,7 @@ class Chatbot:
         ########################################################################
         movies = []
         movie_indices = []
+        input = Chatbot.preprocess(line)
 
         # building up user matrix of movies
         if (self.movie_count < 5):
@@ -164,8 +165,10 @@ class Chatbot:
             #check if user properly formatted movie in input (disable for creative mode???)
             if not self.check_quotation_marks(line):
                 return "You forgot a quotation mark somewhere!!! Try again!"
+            
+            while("" in input):
+                input.remove("")
 
-            input = Chatbot.preprocess(line)
             movies = Chatbot.extract_titles(self, input)
 
             # if sentiment analysis was wrong the first time, user can correct Bert
@@ -180,7 +183,7 @@ class Chatbot:
 
             # arbitrary inputs
             if not movies:
-                poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥",
+                poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥ Remember to put the titles of movies inbetween quotation marks!",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
                                   "Bert only wants to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
@@ -243,6 +246,7 @@ class Chatbot:
 
             #response = "Bert thinks you'll like {}!".format(self.recommended_movies.pop(0))
 
+            confirmation_words = ["yes", "yeah", "yea", "yup"]
             # reset global variables
             if self.num_recs_given == (len(self.recommendations) - 1):
                 response = "This is Bert's last recommendation based on the movies you talked about! Bert really thinks you'll like {}! (･ω<)☆ Type :quit to quit, or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
@@ -254,9 +258,11 @@ class Chatbot:
                 self.recommendations.clear()
                 self.num_recs_given = 0
                 self.recommended_movies.clear()
-            else:
-                response = "Bert thinks you'll like {}! d(･∀･○) Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+            elif (self.num_recs_given >= 1 and any(word in input for word in confirmation_words)) or self.num_recs_given == 0:
+                response = "Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
                 self.num_recs_given += 1
+            else:
+                response = "Bert hopes you like his movie recommendations!!! You can type ':quit' to quit! Bye bye~"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
