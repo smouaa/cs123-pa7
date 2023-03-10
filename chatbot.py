@@ -84,7 +84,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's robotic life easier. (人・ェ・) If Bert misunderstands anything, tell Bert 'no'!"
+        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie, and once Bert understands your taste in movies, Bert will try his best to recommend a movie you'll like! Also, put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -151,12 +151,6 @@ class Chatbot:
         # directly based on how modular it is, we highly recommended writing   #
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
-        #if self.creative:
-        #    response = "I processed {} in creative mode!!".format(line)
-        #else:
-        #    response = "I processed {} in starter mode!!".format(line)
-
-        ######################### PLACEHOLDER (if user corrects sentiment
         movies = []
         movie_indices = []
 
@@ -165,10 +159,6 @@ class Chatbot:
             ########## creative mode: recognizing emotions ###########
             #TO DOOOOOOOO
             ######################
-
-            ####################
-            #TO DO: FIXING A WRONG SENTIMENT ANALYSIS
-            ####################
 
             #check if user properly formatted movie in input (disable for creative mode???)
             if not self.check_quotation_marks(line):
@@ -187,12 +177,12 @@ class Chatbot:
                     self.user_ratings[wrong_movie_index] = 1
                 return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. (￣ー￣)ゞ Let's talk about a new movie now!"
 
-            # if user doesn't talk about movies or if no movie titles are found
+            # arbitrary inputs
             if not movies:
                 poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
-                                  "Bert only want to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
+                                  "Bert only wants to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
                                   "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
@@ -254,7 +244,7 @@ class Chatbot:
 
             # reset global variables
             if self.num_recs_given == (len(self.recommendations) - 1):
-                response = " This is Bert's last recommendation! Bert really thinks you'll like {}! Type :quit to quit or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
+                response = "This is Bert's last recommendation based on the movies you talked about! Bert really thinks you'll like {}! (･ω<)☆ Type :quit to quit, or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
                 self.user_ratings = np.zeros(self.ratings.shape[0])
                 self.prev_movies.clear()
                 self.movie_count = 0
@@ -264,7 +254,7 @@ class Chatbot:
                 self.num_recs_given = 0
                 self.recommended_movies.clear()
             else:
-                response = "Bert thinks you'll like {}! Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                response = "Bert thinks you'll like {}! d(･∀･○) Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
                 self.num_recs_given += 1
 
         ########################################################################
@@ -405,11 +395,15 @@ class Chatbot:
             # Prune for all possible titles containing input substring
             elif reformatted_title in official_title:
                 input_start_index = official_title.find(reformatted_title)
-                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
-                if official_title[input_start_index + len(reformatted_title) + 1] == "(":
-                    ids.append(i)
-                # Check for alternate title
-                if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                if self.creative:
+                    # Disambiguation 1: prune "Screams" but not "Scream 2"
+                    if !official_title[input_start_index + len(reformatted_title)].isalnum():
+                            ids.append(i)
+                    # Alternate title: match "Se7en"
+                    if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                        ids.append(i)
+                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screams"
+                elif official_title[input_start_index + len(reformatted_title) + 1] == "(":
                     ids.append(i)
         return ids
 
