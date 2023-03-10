@@ -61,6 +61,10 @@ class Chatbot:
 
         # print(self.extract_titles(self.preprocess('I liked "The Notebook" a lot.')))
         # print('Titanic: ', self.find_movies_by_title('Titanic'))
+        # print(self.find_movies_by_title("Scream"))
+        # print(self.find_movies_by_title("Percy Jackson"))
+        # print(self.find_movies_by_title("Se7en"))
+        # print(self.find_movies_by_title("La Guerre du feu"))
         
         # count number of movies that the user has rated
         
@@ -173,6 +177,9 @@ class Chatbot:
 
             movies = Chatbot.extract_titles(self, input)
 
+            if self.creative == False and (len(movies) > 1):
+                return "Bert is overwhelmed... Please only tell Bert about one movie at a time!!!"
+
             # if sentiment analysis was wrong the first time, user can correct Bert
             if (self.movie_count != 0) and "no" in input:
                 wrong_movie = self.prev_movies[len(self.prev_movies) - 1]
@@ -193,6 +200,7 @@ class Chatbot:
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
             # currently assuming there is only one movie in the list
+            
             for movie in movies:
                 if movie not in self.prev_movies:
                     movie = movie.replace('"', "") # removes extra quotation marks
@@ -405,11 +413,11 @@ class Chatbot:
             elif reformatted_title in official_title:
                 input_start_index = official_title.find(reformatted_title)
                 if self.creative:
-                    # Disambiguation 1: prune "Screams" but not "Scream 2"
-                    if not official_title[input_start_index + len(reformatted_title)].isalnum():
-                            ids.append(i)
                     # Alternate title: match "Se7en"
-                    if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                    if official_title[input_start_index + len(reformatted_title)] == ")":
+                        ids.append(i)
+                    # Disambiguation 1: prune "Screams" but not "Scream 2"
+                    elif not official_title[input_start_index + len(reformatted_title)].isalnum():
                         ids.append(i)
                 # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screams"
                 elif official_title[input_start_index + len(reformatted_title) + 1] == "(":
