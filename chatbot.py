@@ -84,7 +84,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's robotic life easier. (人・ェ・)"
+        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's robotic life easier. (人・ェ・) If Bert misunderstands anything, tell Bert 'no'!"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -186,7 +186,7 @@ class Chatbot:
                     self.user_ratings[wrong_movie_index] = -1
                 else:
                     self.user_ratings[wrong_movie_index] = 1
-                return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. Let's talk about a new movie now!"
+                return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. (￣ー￣)ゞ Let's talk about a new movie now!"
 
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
@@ -265,7 +265,7 @@ class Chatbot:
                 self.num_recs_given = 0
                 self.recommended_movies.clear()
             else:
-                response = "Bert thinks you'll like {}! Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                response = "Bert thinks you'll like {}! Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
                 self.num_recs_given += 1
 
         ########################################################################
