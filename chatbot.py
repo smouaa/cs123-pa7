@@ -91,8 +91,10 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie, and once Bert understands your taste in movies, Bert will try his best to recommend a movie you'll like! Also, put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
-
+        if self.creative == True:
+            greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie, and once Bert understands your taste in movies, Bert will try his best to recommend a movie you'll like! Also, put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
+        else:
+            greeting_message = "Hey there, I'm Bert, a movies recommender bot. Tell me about a movie, and once I feel like I have a solid of understanding of your taste in movies, I'll try my best to recommend you movies you'd like. If I misunderstand anything, feel free to correct me."
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -105,9 +107,10 @@ class Chatbot:
         ########################################################################
         # TODO: Write a short farewell message                                 #
         ########################################################################
-
-        goodbye_message = "Bye bye! Bert hopes he was helpful. (｡•̀ᴗ-)✧"
-
+        if self.creative == True:
+            goodbye_message = "Bye bye! Bert hopes he was helpful. (｡•̀ᴗ-)✧"
+        else:
+            goodbye_message = "Bye! I hope you enjoy watching whatever movie you end up choosing!"
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
@@ -168,8 +171,8 @@ class Chatbot:
             #TO DOOOOOOOO
             ######################
 
-            #check if user properly formatted movie in input (disable for creative mode???)
-            if not self.check_quotation_marks(line):
+            #check if user properly formatted movie in input
+            if self.creative == False and not self.check_quotation_marks(line):
                 return "You forgot a quotation mark somewhere!!! Try again!"
             
             while("" in input):
@@ -177,8 +180,10 @@ class Chatbot:
 
             movies = Chatbot.extract_titles(self, input)
 
-            if self.creative == False and (len(movies) > 1):
+            if self.creative == True and (len(movies) > 1):
                 return "Bert is overwhelmed... Please only tell Bert about one movie at a time!!!"
+            elif self.creative == False and (len(movies) > 1):
+                return "Please only talk about one movie at a time. Could tell me what you thought about the first movie, please?"
 
             # if sentiment analysis was wrong the first time, user can correct Bert
             if (self.movie_count != 0) and "no" in input:
@@ -188,19 +193,28 @@ class Chatbot:
                     self.user_ratings[wrong_movie_index] = -1
                 else:
                     self.user_ratings[wrong_movie_index] = 1
-                return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. (￣ー￣)ゞ Let's talk about a new movie now!"
+                if self.creative == True:
+                    return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. (￣ー￣)ゞ Let's talk about a new movie now!"
+                elif self.creative == False:
+                    return "I'm sorry for the misunderstanding! I've updated your rating of that movie. Feel free to talk about a different movie, now."
 
             # arbitrary inputs
-            if not movies:
+            if self.creative == True and not movies:
                 poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥ Remember to put the titles of movies inbetween quotation marks!",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
                                   "Bert only wants to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
                                   "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
+            elif self.creative == False and not movies:
+                poss_responses = ["Did you forget to include quotation marks around the title? Try again, please.",
+                                  "Are we talking about a movie? If so, please remember to put quotation marks around the title.",
+                                  "My specialty is talking about movies. If you forgot to put the title in quotation marks, please talk about the movie again and do so.",
+                                  "While I do especially enjoy talking to you, I would really love to recommend you a movie. Please talk about a movie, remembering to put the title in quotation marks.",
+                                  "Hmm, I can't quite tell if you're talking about a movie. Talk about it again, with the title in quotation marks."]
+                return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
             # currently assuming there is only one movie in the list
-            
             for movie in movies:
                 if movie not in self.prev_movies:
                     movie = movie.replace('"', "") # removes extra quotation marks
@@ -208,15 +222,24 @@ class Chatbot:
                     self.movie_count += 1
                     self.prev_movies.append(movie)
                 else:
-                    return "You already mentioned that movie! Bert's memory isn't that bad! (๑•̀д•́๑) Talk about a different movie!!!"
-
+                    if self.creative == True:
+                        return "You already mentioned that movie! Bert's memory isn't that bad! (๑•̀д•́๑) Talk about a different movie!!!"
+                    elif self.creative == False:
+                        return "I believe you already mentioned that movie. In order to give you the best recommendations possible, please talk about a different movie."
+                    
             # if more than one movie found, ask the user to clarify / if no movies are found
             if (len(movie_indices) > 1):
                 self.movie_count -= len(movies)
-                return "Bert found more than one movie with that name! ᕙ(  •̀ ᗜ •́  )ᕗ Bert wants you to put the year in parentheses after the title! Make sure the year is still within the quotation marks, though! (￣ー￣)ゞ"
+                if self.creative == True:
+                    return "Bert found more than one movie with that name! ᕙ(  •̀ ᗜ •́  )ᕗ Bert wants you to put the year in parentheses after the title! Make sure the year is still within the quotation marks, though! (￣ー￣)ゞ"
+                else:
+                    return "I found more than one movie with that name. Could you clarify by putting the year, or perhaps an alternate title in parantheses afterwards?"
             elif not movie_indices:
-                return "Oh... Bert doesn't know that movie. (T⌓T) Tell Bert about a different movie, please..."
-            
+                if self.creative == True:
+                    return "Oh... Bert doesn't know that movie. (T⌓T) Tell Bert about a different movie, please..."
+                else:
+                    return "Hmm, I don't seem to know of that movie. I'm sorry, but could you talk about a different movie?"
+
             sentiment = 0
             
             # currently not configured to handle multiple movies
@@ -228,25 +251,44 @@ class Chatbot:
 
             # if the user likes the movie
             if sentiment == 1:
-                possible_positive_responses = ["So you liked {}? That's one of Bert's favorite movies! ᕕ( ᐛ )ᕗ Tell Bert about another movie you've seen.".format(movies[0]),
-                                      "Bert sees that you like {}! ∠( ᐛ 」∠)_ Please tell Bert about another movie.".format(movies[0]),
-                                      "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!".format(movies[0]),
-                                      "{} was an enjoyable movie, wasn't it?!? Tell Bert about a different movie! +･.゜。(´∀｀)。゜.･+".format(movies[0]),
-                                      "Bert also thinks {} was a good movie!!! Bert wants to know more about your taste in movies!!! (〜￣▽￣)〜".format(movies[0])]
-                response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
+                if self.creative == True:
+                    possible_positive_responses = ["So you liked {}? That's one of Bert's favorite movies! ᕕ( ᐛ )ᕗ Tell Bert about another movie you've seen.".format(movies[0]),
+                                        "Bert sees that you like {}! ∠( ᐛ 」∠)_ Please tell Bert about another movie.".format(movies[0]),
+                                        "Bert thinks you like movies like {}. (*･▽･*) Is that right? Tell Bert more!".format(movies[0]),
+                                        "{} was an enjoyable movie, wasn't it?!? Tell Bert about a different movie! +･.゜。(´∀｀)。゜.･+".format(movies[0]),
+                                        "Bert also thinks {} was a good movie!!! Bert wants to know more about your taste in movies!!! (〜￣▽￣)〜".format(movies[0])]
+                    response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
+                else:
+                    possible_positive_responses = ["So you liked {}? I also enjoy that movie! Tell me about another movie you've seen.".format(movies[0]),
+                                                   "I see that you like {}. Please tell me about another movie you've seen.".format(movies[0]),
+                                                   "I think you like movies like {}, is that right? Tell me about a different movie.".format(movies[0]),
+                                                   "{} was an enjoyable movie, wasn't it? Is there another movie you'd like to talk about?".format(movies[0]),
+                                                   "I also think {} is a good movie. Can you talk about more movies you like, or perhaps movies you dislike?".format(movies[0])]
+                    response = possible_positive_responses[random.randint(0, len(possible_positive_responses) - 1)]
             elif sentiment == -1:
-                possible_negative_responses = ["Oh no... you didn't like {}? Bert wants to know more about your taste in movies! (๑•﹏•)⋆* ⁑⋆*".format(movies[0]),
-                                               "Bert sees that you didn't like {}... ｡ﾟヽ(ﾟ´Д｀)ﾉﾟ｡ Tell Bert about a different movie!".format(movies[0]),
-                                               "You don't like movies like {}? Tell Bert about a different movie! Bert needs more information! ヽ(´□｀。)ﾉ".format(movies[0]),
-                                               "{} wasn't a good movie, was it? (Bert secretly agrees! ᕕ( ◔3◔)ᕗ) What's your opinion on a different movie?!?".format(movies[0]),
-                                               "Bert thinks you don't like {}, is that right?!? ( ✧≖ ͜ʖ≖) Bert is curious about what you think about other movies!!!".format(movies[0])]
-                response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
+                if self.creative == True:
+                    possible_negative_responses = ["Oh no... you didn't like {}? Bert wants to know more about your taste in movies! (๑•﹏•)⋆* ⁑⋆*".format(movies[0]),
+                                                "Bert sees that you didn't like {}... ｡ﾟヽ(ﾟ´Д｀)ﾉﾟ｡ Tell Bert about a different movie!".format(movies[0]),
+                                                "You don't like movies like {}? Tell Bert about a different movie! Bert needs more information! ヽ(´□｀。)ﾉ".format(movies[0]),
+                                                "{} wasn't a good movie, was it? (Bert secretly agrees! ᕕ( ◔3◔)ᕗ) What's your opinion on a different movie?!?".format(movies[0]),
+                                                "Bert thinks you don't like {}, is that right?!? ( ✧≖ ͜ʖ≖) Bert is curious about what you think about other movies!!!".format(movies[0])]
+                    response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
+                else:
+                    possible_negative_responses = ["Oh, so you didn't like {}? Tell me about more movies, then.".format(movies[0]),
+                                                   "I see that you don't like {}. Is there another movie you dislike? Or perhaps one you like?".format(movies[0]),
+                                                   "You don't like movies like {}, right? Tell me about a different movie.".format(movies[0]),
+                                                   "{} wasn't a good movie, was it? What's your opinion on a different movie?".format(movies[0]),
+                                                   "I think you said you don't like {}, is that right? Tell me your opinion on a different movie.".format(movies[0])]
+                    response = possible_negative_responses[random.randint(0, len(possible_negative_responses) - 1)]
             elif sentiment == 0:
                 self.movie_count -= 1
-                return "Bert is sorry... Bert doesn't know if you like or dislike that movie... ｡･ﾟﾟ･(>д<)･ﾟﾟ･｡ Tell Bert more about it!!!"
+                if self.creative == True:
+                    return "Bert is sorry... Bert doesn't know if you like or dislike that movie... ｡･ﾟﾟ･(>д<)･ﾟﾟ･｡ Tell Bert more about it!!!"
+                elif self.creative == False:
+                    return "I'm sorry, I can't seem to tell if you like or dislike that movie. Tell me more about it."
 
         # if user has inputted a sufficient of movies they like or dislike
-        if (self.movie_count == 5):
+        if (self.movie_count > 5):
             
             if self.num_recs_given == 0:
                 self.recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
@@ -254,12 +296,13 @@ class Chatbot:
                 for id in self.recommendations:
                     self.recommended_movies.append(self.titles[id][0])
 
-            #response = "Bert thinks you'll like {}!".format(self.recommended_movies.pop(0))
-
             confirmation_words = ["yes", "yeah", "yea", "yup"]
             # reset global variables
             if self.num_recs_given == (len(self.recommendations) - 1):
-                response = "This is Bert's last recommendation based on the movies you talked about! Bert really thinks you'll like {}! (･ω<)☆ Type :quit to quit, or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
+                if self.creative == True:
+                    response = "This is Bert's last recommendation based on the movies you talked about! Bert really thinks you'll like {}! (･ω<)☆ Type :quit to quit, or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
+                else:
+                    response = "This is my last recommendation based on the movies you talked about. I think you'd enjoy {}. If you'd like more recommendations, feel free to talk about more movies. Otherwise, type ':quit: to quit.".format(self.recommended_movies.pop(0))
                 self.user_ratings = np.zeros(self.ratings.shape[0])
                 self.prev_movies.clear()
                 self.movie_count = 0
@@ -269,11 +312,16 @@ class Chatbot:
                 self.num_recs_given = 0
                 self.recommended_movies.clear()
             elif (self.num_recs_given >= 1 and any(word in input for word in confirmation_words)) or self.num_recs_given == 0:
-                response = "Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                if self.creative == True:
+                    response = "Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                else:
+                    response = "I believe you'd enjoy {}. Would you like another recommendation? Otherwise, type ':quit' to quit.".format(self.recommended_movies.pop(0))
                 self.num_recs_given += 1
             else:
-                response = "Bert hopes you like his movie recommendations!!! You can type ':quit' to quit! Bye bye~"
-
+                if self.creative == True:
+                    response = "Bert hopes you like his movie recommendations!!! You can type ':quit' to quit! Bye bye~"
+                else:
+                    response = "I hope you enjoy my recommendations. You can type ':quit' to exit. Goodbye!"
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
