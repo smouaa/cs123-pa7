@@ -176,6 +176,9 @@ class Chatbot:
 
             movies = Chatbot.extract_titles(self, input)
 
+            if self.creative == False and (len(movies) > 1):
+                return "Bert is overwhelmed... Please only tell Bert about one movie at a time!!!"
+
             # if sentiment analysis was wrong the first time, user can correct Bert
             if (self.movie_count != 0) and "no" in input:
                 wrong_movie = self.prev_movies[len(self.prev_movies) - 1]
@@ -196,6 +199,7 @@ class Chatbot:
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
             # currently assuming there is only one movie in the list
+            
             for movie in movies:
                 if movie not in self.prev_movies:
                     movie = movie.replace('"', "") # removes extra quotation marks
