@@ -84,7 +84,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike. Put the title in quotation marks please! \nIt'll make Bert's life easier. (人・ェ・)"
+        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's robotic life easier. (人・ェ・)"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -99,7 +99,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Bye bye! Bert hopes Bert was helpful. (｡•̀ᴗ-)✧"
+        goodbye_message = "Bye bye! Bert hopes he was helpful. (｡•̀ᴗ-)✧"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -109,6 +109,21 @@ class Chatbot:
     ############################################################################
     # 2. Modules 2 and 3: extraction and transformation                        #
     ############################################################################
+    def check_quotation_marks(self, s):
+        """
+        This helper function checks if the string has closed quotation marks.
+        """
+        lst = []
+        for char in s:
+            if char == '"':
+                if lst and lst[-1] == char:
+                    lst.pop()
+                else:
+                    lst.append(char)
+            else:
+                pass
+
+        return len(lst) == 0
 
     def process(self, line):
         """Process a line of input from the REPL and generate a response.
@@ -151,15 +166,36 @@ class Chatbot:
             #TO DOOOOOOOO
             ######################
 
-            #################
+            ####################
             #TO DO: FIXING A WRONG SENTIMENT ANALYSIS
             ####################
 
+            #check if user properly formatted movie in input (disable for creative mode???)
+            if not self.check_quotation_marks(line):
+                return "You forgot a quotation mark somewhere!!! Try again!"
+
             input = Chatbot.preprocess(line)
+            string_input = ' '.join(input).lower()
             movies = Chatbot.extract_titles(self, input)
+
+            # if sentiment analysis was wrong the first time, user can correct Bert
+            if (self.movie_count != 0) and "no" in string_input:
+                wrong_movie = self.prev_movies[len(self.prev_movies) - 1]
+                wrong_movie_index = Chatbot.find_movies_by_title(self, wrong_movie)
+                if self.user_ratings[wrong_movie_index] == 1:
+                    self.user_ratings[wrong_movie_index] = -1
+                else:
+                    self.user_ratings[wrong_movie_index] = 1
+                return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. Let's talk about a new movie now!"
+
             # if user doesn't talk about movies or if no movie titles are found
             if not movies:
-                return "Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥"
+                poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥",
+                                  "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
+                                  "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
+                                  "Bert only want to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥"
+                                  "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
+                return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
             # currently assuming there is only one movie in the list
             for movie in movies:
