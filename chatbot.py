@@ -395,11 +395,15 @@ class Chatbot:
             # Prune for all possible titles containing input substring
             elif reformatted_title in official_title:
                 input_start_index = official_title.find(reformatted_title)
-                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screaming"
-                if official_title[input_start_index + len(reformatted_title) + 1] == "(":
-                    ids.append(i)
-                # Check for alternate title
-                if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                if self.creative:
+                    # Disambiguation 1: prune "Screams" but not "Scream 2"
+                    if !official_title.find[input_start_index + len(reformatted_title)].isalnum():
+                            ids.append(i)
+                    # Alternate title: match "Se7en"
+                    if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                        ids.append(i)
+                # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screams"
+                elif official_title[input_start_index + len(reformatted_title) + 1] == "(":
                     ids.append(i)
         return ids
 
