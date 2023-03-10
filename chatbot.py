@@ -539,7 +539,7 @@ class Chatbot:
         """
         pass
 
-    def editDistance(str1, str2, m, n):
+    def editDistance(self, str1, str2, m, n):
  
         # if first string is empty, we can only insert all characters of second string into first
         if m == 0:
@@ -551,13 +551,12 @@ class Chatbot:
     
         # if last chars equal, nothing needed. disregard last chars, recurse thru other strs
         if str1[m-1] == str2[n-1]:
-            return Chatbot.editDistance(str1, str2, m-1, n-1)
+            return self.editDistance(str1, str2, m-1, n-1)
     
         # if last chars different, consider all three operations on last character of first string, recursively
-
-        return min((1 + Chatbot.editDistance(str1, str2, m, n-1)),    # insertion                   
-    			(1 + Chatbot.editDistance(str1, str2, m-1, n)),       # deletion
-                (2 + Chatbot.editDistance(str1, str2, m-1, n-1)),     # substitution
+        return min((1 + self.editDistance(str1, str2, m, n-1)),    # insertion                   
+    			(1 + self.editDistance(str1, str2, m-1, n)),       # deletion
+                (2 + self.editDistance(str1, str2, m-1, n-1)),     # substitution
             )
 
 
@@ -590,13 +589,21 @@ class Chatbot:
 
         # if no movies have titles within max_dist of the provided title, return empty
         # if there's a movie closer in edit distance to the given title than all other movies, return 1-elem list
-        # if there is a tie, retuen all indices
+        # if there is a tie, retuen all indices (where do we get these indices from?)
 
-        for title in self.titles:
-            closest = []
+        closest = []  # numpy.argmax
 
+        distances = []
+        for choice in self.titles:
+            distances.append(self.editDistance(title, choice, len(title), len(choice)))    # distance to indices
+
+        min = min(distances)
+        for i in range in len(self.titles):
+            if self.titles[i] == min:
+                closest.append(i)
 
         return closest
+
 
 
     def disambiguate(self, clarification, candidates):
@@ -664,7 +671,6 @@ class Chatbot:
 
         new_ratings[(ratings <= threshold) & (ratings != 0)] = -1.0
         new_ratings[(ratings > threshold) & (ratings != 0)] = 1.0
-
 
         binarized_ratings = new_ratings
 
