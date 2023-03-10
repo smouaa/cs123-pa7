@@ -151,12 +151,6 @@ class Chatbot:
         # directly based on how modular it is, we highly recommended writing   #
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
-        #if self.creative:
-        #    response = "I processed {} in creative mode!!".format(line)
-        #else:
-        #    response = "I processed {} in starter mode!!".format(line)
-
-        ######################### PLACEHOLDER (if user corrects sentiment
         movies = []
         movie_indices = []
 
@@ -165,10 +159,6 @@ class Chatbot:
             ########## creative mode: recognizing emotions ###########
             #TO DOOOOOOOO
             ######################
-
-            ####################
-            #TO DO: FIXING A WRONG SENTIMENT ANALYSIS
-            ####################
 
             #check if user properly formatted movie in input (disable for creative mode???)
             if not self.check_quotation_marks(line):
@@ -187,12 +177,12 @@ class Chatbot:
                     self.user_ratings[wrong_movie_index] = 1
                 return "Oh, okay! Bert must've misheard! Bert understands now and has corrected the mistake. (￣ー￣)ゞ Let's talk about a new movie now!"
 
-            # if user doesn't talk about movies or if no movie titles are found
+            # arbitrary inputs
             if not movies:
                 poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
-                                  "Bert only want to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
+                                  "Bert only wants to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
                                   "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
