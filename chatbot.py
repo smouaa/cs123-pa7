@@ -657,15 +657,7 @@ class Chatbot:
         :returns: a list of movie indices with titles closest to the given title
         and within edit distance max_distance
         """
-
         # numpy argmax?
-        # input = potentially misspelled title
-        # output = list of movies in dataset whose titles have least edit distance from provided title, edit distance up to max distance
-
-        # if no movies have titles within max_dist of the provided title, return empty
-        # if there's a movie closer in edit distance to the given title than all other movies, return 1-elem list
-        # if there is a tie, retuen all indices (where do we get these indices from?)
-
         
         regex = '([0-9]{4})'
         
@@ -739,18 +731,7 @@ class Chatbot:
 
         :returns: a binarized version of the movie-rating matrix
         """
-        ########################################################################
-        # TODO: Binarize the supplied ratings matrix.                          #
-        #                                                                      #
-        # WARNING: Do not use self.ratings directly in this function.          #
-        ########################################################################
-
-        # The starter code returns a new matrix shaped like ratings but full of
-        # zeros.
-        
-        # ratings = num_movies x num_users matrix of user ratings, from 0.5 to 5.0
-        # threshold = numerical rating above which ratings are considered positive
-        # returns = binarized version of the matrix
+        # do not use self.ratings directly in this function.
 
         new_ratings = ratings
 
@@ -759,9 +740,6 @@ class Chatbot:
 
         binarized_ratings = new_ratings
 
-        ########################################################################
-        #                        END OF YOUR CODE                              #
-        ########################################################################
         return binarized_ratings
 
     def similarity(self, u, v):
@@ -774,9 +752,6 @@ class Chatbot:
 
         :returns: the cosine similarity between the two vectors
         """
-        ########################################################################
-        # TODO: Compute cosine similarity between the two vectors.             #
-        ########################################################################
 
         numerator = np.dot(u, v)
         u_norm = 0 + 1e-30
@@ -792,9 +767,6 @@ class Chatbot:
         
         cosine_sim = numerator / (u_norm * v_norm)
     
-        ########################################################################
-        #                          END OF YOUR CODE                            #
-        ########################################################################
         return cosine_sim
 
     def recommend(self, user_ratings, ratings_matrix, k=10, creative=False):
@@ -820,25 +792,10 @@ class Chatbot:
         ratings_matrix, in descending order of recommendation.
         """
 
-        ########################################################################
-        # TODO: Implement a recommendation function that takes a vector        #
-        # user_ratings and matrix ratings_matrix and outputs a list of movies  #
-        # recommended by the chatbot.                                          #
-        #                                                                      #
-        # WARNING: Do not use the self.ratings matrix directly in this         #
-        # function.                                                            #
-        #                                                                      #
-        # For starter mode, you should use item-item collaborative filtering   #
-        # with cosine similarity, no mean-centering, and no normalization of   #
-        # scores.                                                              #
-        ########################################################################
+        # item-item collaborative filtering with cosine similarity, no mean-centering, and no normalization of scores.                                                              #
 
         # exclude movies the user has already rated
-
-        # ratings_matrix - binarized 2D numpy matrix of all ratings, where ratings_matrix[i, j] is the rating for movie i by user j
-        # input the provided vector of the user's preferences and a pre-processed matrix of ratings by other users 
         # can assume ratings_matrix does not contain the current user's ratings.
-
 
         # for each movie i in the dataset
         # calculate the rating of user's rating of the movie i and the cosine between vectors for movies i and j
@@ -867,9 +824,6 @@ class Chatbot:
         
         recommendations.reverse()
 
-        ########################################################################
-        #                        END OF YOUR CODE                              #
-        ########################################################################
         return recommendations
 
     ############################################################################
