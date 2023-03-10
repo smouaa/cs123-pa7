@@ -549,25 +549,25 @@ class Chatbot:
         """
         pass
 
-    def edit_distance(self, str1, str2, m, n):
- 
-        # if first string is empty, we can only insert all characters of second string into first
-        if m == 0:
-            return n
-    
-        # if second string is empty, we can only remove all characters of first string
-        if n == 0:
-            return m
-    
-        # if last chars equal, nothing needed. disregard last chars, recurse thru other strs
-        if str1[m-1] == str2[n-1]:
-            return self.edit_distance(str1, str2, m-1, n-1)
-    
-        # if last chars different, consider all three operations on last character of first string, recursively
-        return min((1 + self.edit_distance(str1, str2, m, n-1)),    # insertion                   
-    			   (1 + self.edit_distance(str1, str2, m-1, n)),       # deletion
-                   (2 + self.edit_distance(str1, str2, m-1, n-1))     # substitution
-                   )
+    def edit_distance(self, str1, str2):
+        """Citation: https://leetcode.com/problems/edit-distance/solutions/159295/python-solutions-and-intuition/"""
+
+        m = len(str1)
+        n = len(str2)
+        table = [[0] * (n + 1) for _ in range(m + 1)]
+
+        for i in range(m + 1):
+            table[i][0] = i
+        for j in range(n + 1):
+            table[0][j] = j
+
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if str1[i - 1] == str2[j - 1]:
+                    table[i][j] = table[i - 1][j - 1]
+                else:
+                    table[i][j] = 1 + min(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1])
+        return table[-1][-1]
 
 
     def find_movies_closest_to_title(self, title, max_distance=3):
@@ -594,6 +594,7 @@ class Chatbot:
         and within edit distance max_distance
         """
 
+        # numpy argmax?
         # input = potentially misspelled title
         # output = list of movies in dataset whose titles have least edit distance from provided title, edit distance up to max distance
 
@@ -601,23 +602,25 @@ class Chatbot:
         # if there's a movie closer in edit distance to the given title than all other movies, return 1-elem list
         # if there is a tie, retuen all indices (where do we get these indices from?)
 
-        closest = []  # numpy.argmax
-
+        
         regex = '([0-9]{4})'
+        
+        closest = []
         distances = []
+
+        movie = title.lower()
+
         for t in self.titles:
             index = t[0].find("(")
-            choice = t[0][:index]
-            distances.append(self.edit_distance(title, choice, len(title), len(choice)))    # distance to indices
+            choice = t[0][:index].lower()
+            distances.append(self.edit_distance(movie, choice))    # distance to indices
         
         minimum = min(distances)
-
         for i in range(len(distances)):
             if distances[i] == minimum:
                 closest.append(i)
 
         return closest
-
 
 
     def disambiguate(self, clarification, candidates):
