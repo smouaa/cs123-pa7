@@ -448,7 +448,7 @@ class Chatbot:
 
         index = 0
         prev_word = ""
-        for word in preprocessed_input: # <---- this is currently iterating through each char, not each word
+        for word in preprocessed_input:
             if word in negators_conj:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
