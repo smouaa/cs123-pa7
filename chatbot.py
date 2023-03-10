@@ -165,12 +165,10 @@ class Chatbot:
         movie_indices = []
         input = Chatbot.preprocess(line)
 
+        # handles user talking about emotions (creative mode feature)
+
         # building up user matrix of movies
         if (self.movie_count < 5):
-            ########## creative mode: recognizing emotions ###########
-            #TO DOOOOOOOO
-            ######################
-
             #check if user properly formatted movie in input
             if self.creative == False and not self.check_quotation_marks(line):
                 return "You forgot a quotation mark somewhere!!! Try again!"
@@ -200,19 +198,27 @@ class Chatbot:
 
             # arbitrary inputs
             if self.creative == True and not movies:
-                poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥ Remember to put the titles of movies inbetween quotation marks!",
+                # check if user expressed their emotions using an expression like "I am (emotion)" or "I feel (emotion)"
+                regex = r"(i\s*(am|feel)\s*(\w+))"
+                match = re.search(regex, line, re.IGNORECASE)
+
+                if not match:
+                    poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥ Remember to put the titles of movies inbetween quotation marks!",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
                                   "Bert only wants to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
                                   "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
-                return poss_responses[random.randint(0, len(poss_responses) - 1)]
-            elif self.creative == False and not movies:
-                poss_responses = ["Did you forget to include quotation marks around the title? Try again, please.",
+                    return poss_responses[random.randint(0, len(poss_responses) - 1)]
+                elif self.creative == False and not movies:
+                    poss_responses = ["Did you forget to include quotation marks around the title? Try again, please.",
                                   "Are we talking about a movie? If so, please remember to put quotation marks around the title.",
                                   "My specialty is talking about movies. If you forgot to put the title in quotation marks, please talk about the movie again and do so.",
                                   "While I do especially enjoy talking to you, I would really love to recommend you a movie. Please talk about a movie, remembering to put the title in quotation marks.",
                                   "Hmm, I can't quite tell if you're talking about a movie. Talk about it again, with the title in quotation marks."]
-                return poss_responses[random.randint(0, len(poss_responses) - 1)]
+                    return poss_responses[random.randint(0, len(poss_responses) - 1)]
+                else:
+                    emotion = match.group(3)
+                    return "Oh, Bert thinks you're {}. Do you want to talk to Bert about it? Bert can't make any promises though... ( ˙▿˙ )".format(emotion)
             
             # currently assuming there is only one movie in the list
             for movie in movies:
@@ -288,8 +294,7 @@ class Chatbot:
                     return "I'm sorry, I can't seem to tell if you like or dislike that movie. Tell me more about it."
 
         # if user has inputted a sufficient of movies they like or dislike
-        if (self.movie_count > 5):
-            
+        if (self.movie_count == 5):
             if self.num_recs_given == 0:
                 self.recommendations = Chatbot.recommend(self, self.user_ratings, self.ratings, creative=self.creative)
 
@@ -319,7 +324,7 @@ class Chatbot:
                 self.num_recs_given += 1
             else:
                 if self.creative == True:
-                    response = "Bert hopes you like his movie recommendations!!! You can type ':quit' to quit! Bye bye~"
+                    response = "Bert hopes you like his movie recommendations!!! You can type ':quit' to quit! (｡･ω･)ﾉﾞ Bye bye~"
                 else:
                     response = "I hope you enjoy my recommendations. You can type ':quit' to exit. Goodbye!"
         ########################################################################
@@ -897,12 +902,12 @@ class Chatbot:
         Consider adding to this description any information about what your
         chatbot can do and how the user can interact with it.
         """
-        return """
+        return "Bert is a movie recommender bot who can give you movie recommendations based \non your personal taste. After you talk about 5 movies (at minimum), Bert will start giving you movie recommendations. \nMake sure to include the title of the movie in quotes."
+        """
         Your task is to implement the chatbot as detailed in the PA7
         instructions.
         Remember: in the starter mode, movie names will come in quotation marks
         and expressions of sentiment will be simple!
-        TODO: Bert needs at least 5 movies to get a solid understanding of what you like.
         """
 
 

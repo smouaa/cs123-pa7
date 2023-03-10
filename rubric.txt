@@ -28,7 +28,8 @@ Did not implement any of the above features: NO
 # Team Contributions                                                                    #
 #########################################################################################
 Katie - 
-Sheng - 
+Sheng - I implemented the process() function (as well as the greeting, goodbye, and intro messages). For creative mode, I implemented 
+        "responding to arbitrary input," "identifying and responding to emotions," and "chatbot theme/persona." 
 Albert - 
 Stella - 
 
