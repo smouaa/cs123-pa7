@@ -175,11 +175,10 @@ class Chatbot:
                 return "You forgot a quotation mark somewhere!!! Try again!"
 
             input = Chatbot.preprocess(line)
-            string_input = ' '.join(input).lower()
             movies = Chatbot.extract_titles(self, input)
 
             # if sentiment analysis was wrong the first time, user can correct Bert
-            if (self.movie_count != 0) and "no" in string_input:
+            if (self.movie_count != 0) and "no" in input:
                 wrong_movie = self.prev_movies[len(self.prev_movies) - 1]
                 wrong_movie_index = Chatbot.find_movies_by_title(self, wrong_movie)
                 if self.user_ratings[wrong_movie_index] == 1:
@@ -193,7 +192,7 @@ class Chatbot:
                 poss_responses = ["Um... are you talking about a movie? Bert's specialty is recommending movies. ╥﹏╥",
                                   "Bert understands, but Bert wants to talk about movies! (ง •̀_•́)ง‼",
                                   "Oh, Bert sees what you're saying! But Bert really really wants to discuss movies! Tell Bert about a movie! ٩(๑`^´๑)۶",
-                                  "Bert only want to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥"
+                                  "Bert only want to talk about movies though... Tell Bert about a movie! (๑ơ ₃ ơ)♥",
                                   "Bert is getting overwhelmed by all this non-movie talk... let's talk about movies, okay? ٩(๑˃̵ᴗ˂̵๑)۶"]
                 return poss_responses[random.randint(0, len(poss_responses) - 1)]
             
