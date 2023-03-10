@@ -447,7 +447,7 @@ class Chatbot:
 
         # List of words that negate the sentiment of the phrase
         # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
-        print(preprocessed_input)
+        #print(preprocessed_input)
         negators = ['not', 'didnt', 'never', 'cant']
         negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
         emphasizers = ['really', 'reaally', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
@@ -588,35 +588,7 @@ class Chatbot:
                 elif total_pos < total_neg:
                     return -1
                 else:
-                    return 0          
-        
-        #print("Total Positive: ", total_pos)
-        #print("Total Negative: ", total_neg)
-        #print("Negator Present: ", negator_present)
-
-        # if the total number of sentiment words is 1 or less, do basic processing
-        # if total_pos + total_neg < 2:
-        #     if total_pos > total_neg:
-        #         return 1 if not strong_sentiment else 2
-        #     elif total_pos < total_neg:
-        #         return -1 if not strong_sentiment else -2
-        #     else:
-        #         return 0
-        # # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
-        # elif negator_present and total_pos >= 1 and total_neg >= 1:
-        #     # if the last word is positive, return 1
-        #     if last_word == 1:
-        #         return 1 if not strong_sentiment else 2
-        #     else:
-        #         return -1 if not strong_sentiment else -2
-        # # Catch-all for all other cases: just compare the total number of positive and negative words
-        # else:
-        #     if total_pos > total_neg:
-        #         return 1 if not strong_sentiment else 2
-        #     elif total_pos < total_neg:
-        #         return -1 if not strong_sentiment else -2
-        #     else:
-        #         return 0                       
+                    return 0                   
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
