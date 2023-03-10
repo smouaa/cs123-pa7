@@ -43,6 +43,7 @@ class Chatbot:
         self.movie_count = 0
         self.num_recs_given = 0
         
+        
         print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
         print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
@@ -59,6 +60,10 @@ class Chatbot:
 
         # print(self.extract_titles(self.preprocess('I liked "The Notebook" a lot.')))
         # print('Titanic: ', self.find_movies_by_title('Titanic'))
+        # print(self.find_movies_by_title("Scream"))
+        # print(self.find_movies_by_title("Percy Jackson"))
+        # print(self.find_movies_by_title("Se7en"))
+        # print(self.find_movies_by_title("La Guerre du feu"))
         
         # count number of movies that the user has rated
         
@@ -403,11 +408,11 @@ class Chatbot:
             elif reformatted_title in official_title:
                 input_start_index = official_title.find(reformatted_title)
                 if self.creative:
-                    # Disambiguation 1: prune "Screams" but not "Scream 2"
-                    if not official_title[input_start_index + len(reformatted_title)].isalnum():
-                            ids.append(i)
                     # Alternate title: match "Se7en"
-                    if official_title[input_start_index + len(reformatted_title) + 2] == "(":
+                    if official_title[input_start_index + len(reformatted_title)] == ")":
+                        ids.append(i)
+                    # Disambiguation 1: prune "Screams" but not "Scream 2"
+                    elif not official_title[input_start_index + len(reformatted_title)].isalnum():
                         ids.append(i)
                 # Check that wording is (somewhat) exact, i.e. "Scream" is not actually "Scream 2" or "Screams"
                 elif official_title[input_start_index + len(reformatted_title) + 1] == "(":
