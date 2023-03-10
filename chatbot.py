@@ -22,6 +22,7 @@ class Chatbot:
     """Simple class to implement the chatbot for PA 6."""
 
     edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like', 'despised': 'despise', 'despises': 'despise', 'despising': 'despise', 'adored': 'adore', 'adores': 'adore', 'adoring': 'adore'}
+    
 
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
@@ -434,6 +435,8 @@ class Chatbot:
         negators = ['not', 'didnt', 'never', 'cant']
         negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
         emphasizers = ['really', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
+        strong_positive = []
+        strong_negative = []
 
         total_pos = 0
         total_neg = 0
@@ -447,6 +450,13 @@ class Chatbot:
                 negator_present = True
             if "\"" not in word and word in self.sentiment:
                 if prev_word in negators:
+                    if word in Chatbot.edge_cases:
+                        if Chatbot.edge_cases[word] in strong_negative:
+                            total_pos += 2
+                            last_word = 1
+                        elif Chatbot.edge_cases[word] in strong_positive:
+                            total_neg += 2
+                            last_word = -1
                     if self.sentiment[word] == 'pos':
                         total_neg += 1
                         last_word = -1
@@ -454,12 +464,19 @@ class Chatbot:
                         total_pos += 1
                         last_word = 1
                 else:
+                    if word in Chatbot.edge_cases:
+                        if Chatbot.edge_cases[word] in strong_positive:
+                            total_pos += 2
+                            last_word = 1
+                        elif Chatbot.edge_cases[word] in strong_negative:
+                            total_neg += 2
+                            last_word = -1
                     if self.sentiment[word] == 'pos':
                         total_pos += 1
-                        last_word = 1
+                        last_word = -1
                     else:
                         total_neg += 1
-                        last_word = -1                    
+                        last_word = 1               
 
             index += 1
             if word not in emphasizers:
@@ -528,13 +545,13 @@ class Chatbot:
     
         # if last chars equal, nothing needed. disregard last chars, recurse thru other strs
         if str1[m-1] == str2[n-1]:
-            return editDistance(str1, str2, m-1, n-1)
+            return Chatbot.editDistance(str1, str2, m-1, n-1)
     
         # if last chars different, consider all three operations on last character of first string, recursively
 
-        return min((1 + editDistance(str1, str2, m, n-1)),    # insertion                   
-    			(1 + editDistance(str1, str2, m-1, n)),       # deletion
-                (2 + editDistance(str1, str2, m-1, n-1)),     # substitution
+        return min((1 + Chatbot.editDistance(str1, str2, m, n-1)),    # insertion                   
+    			(1 + Chatbot.editDistance(str1, str2, m-1, n)),       # deletion
+                (2 + Chatbot.editDistance(str1, str2, m-1, n-1)),     # substitution
             )
 
 
@@ -570,7 +587,7 @@ class Chatbot:
         # if there is a tie, retuen all indices
 
         for title in self.titles:
-        closest = []
+            closest = []
 
 
         return closest
