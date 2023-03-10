@@ -43,7 +43,7 @@ class Chatbot:
         self.movie_count = 0
         self.num_recs_given = 0
 
-        print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
+        #print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
         
         #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
@@ -630,7 +630,7 @@ class Chatbot:
                 if str1[i - 1] == str2[j - 1]:
                     table[i][j] = table[i - 1][j - 1]
                 else:
-                    table[i][j] = 1 + min(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1])
+                    table[i][j] = min((1 + table[i - 1][j]), (1 + table[i][j - 1]), (2 + table[i - 1][j - 1]))
         return table[-1][-1]
 
 
@@ -673,15 +673,19 @@ class Chatbot:
         distances = []
 
         movie = title.lower()
-
+        #print(movie)
         for t in self.titles:
-            index = t[0].find("(")
-            choice = t[0][:index].lower()
-            distances.append(self.edit_distance(movie, choice))    # distance to indices
+            index = t[0].find(" (")
+            if index != -1:                                           # if there exists a date
+                choice = t[0][:index].lower()
+            else:
+                choice = t[0].lower()
+            distances.append(self.edit_distance(movie, choice))
         
         minimum = min(distances)
+        #print(minimum)
         for i in range(len(distances)):
-            if distances[i] == minimum:
+            if minimum <= max_distance and distances[i] == minimum:
                 closest.append(i)
 
         return closest
