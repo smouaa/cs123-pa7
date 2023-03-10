@@ -84,7 +84,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's robotic life easier. (人・ェ・) If Bert misunderstands anything, tell Bert 'no'!"
+        greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie you like or dislike, and Bert will try his best to recommend a movie you'll like! Put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -244,7 +244,7 @@ class Chatbot:
 
             # reset global variables
             if self.num_recs_given == (len(self.recommendations) - 1):
-                response = " This is Bert's last recommendation! Bert really thinks you'll like {}! Type :quit to quit or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
+                response = "This is Bert's last recommendation based on the movies you talked about! Bert really thinks you'll like {}! (･ω<)☆ Type :quit to quit, or talk about more movies for more recommendations!".format(self.recommended_movies.pop(0))
                 self.user_ratings = np.zeros(self.ratings.shape[0])
                 self.prev_movies.clear()
                 self.movie_count = 0
@@ -254,7 +254,7 @@ class Chatbot:
                 self.num_recs_given = 0
                 self.recommended_movies.clear()
             else:
-                response = "Bert thinks you'll like {}! Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                response = "Bert thinks you'll like {}! d(･∀･○) Type anything to get another recommendation! Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
                 self.num_recs_given += 1
 
         ########################################################################
