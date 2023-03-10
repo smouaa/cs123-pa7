@@ -450,81 +450,145 @@ class Chatbot:
         #print(preprocessed_input)
         negators = ['not', 'didnt', 'never', 'cant']
         negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
-        emphasizers = ['really', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
-        strong_positive = []
-        strong_negative = []
+        emphasizers = ['really', 'reaally', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
+        strong_positive = ['love', 'adore', 'amazing', 'awesome', 'great', 'fantastic', 'wonderful', 'excellent', 'perfect', 'superb', 'terrific', 'brilliant', 'outstanding', 'fabulous', 'marvelous', 'splendid', 'stunning', 'amazing', 'astonishing', 'astounding', 'awesome', 'breathtaking', 'cool', 'dazzling', 'delightful', 'excellent', 'extraordinary', 'fabulous', 'fantastic', 'fine', 'first-class', 'first-rate', 'flawless', 'fortunate', 'fortunate', 'fortunate']
+        strong_negative = ['hate', 'despise', 'terrible', 'awful', 'horrible', 'bad', 'lousy', 'poor', 'abysmal', 'atrocious', 'awful', 'bad', 'bogus', 'cheap', 'crappy', 'crummy', 'cruddy', 'crude', 'deplorable', 'dreadful', 'dumb', 'dysfunctional', 'embarrassing', 'enormous', 'evil']
 
         total_pos = 0
         total_neg = 0
         last_word = 0
         negator_present = False
 
+        strong_sentiment = False
+        emphasis = False
+
         index = 0
         prev_word = ""
-        for word in preprocessed_input:
-            if word in negators_conj:
-                negator_present = True
-            if "\"" not in word and word in self.sentiment:
-                if prev_word in negators:
-                    if word in Chatbot.edge_cases:
-                        if Chatbot.edge_cases[word] in strong_negative:
+        if self.creative:
+            for word in preprocessed_input:
+                if word in negators_conj:
+                    negator_present = True
+                if "\"" not in word and word in self.sentiment:
+                    if prev_word in negators:
+                        # if word in Chatbot.edge_cases:
+                        #     if Chatbot.edge_cases[word] in strong_negative:
+                        #         total_pos += 2
+                        #         last_word = 1
+                        #         strong_sentiment = True
+                        #     elif Chatbot.edge_cases[word] in strong_positive:
+                        #         total_neg += 2
+                        #         last_word = -1
+                        #         strong_sentiment = True
+                        if word in strong_negative:
                             total_pos += 2
                             last_word = 1
-                        elif Chatbot.edge_cases[word] in strong_positive:
+                            strong_sentiment = True
+                        elif word in strong_positive:
                             total_neg += 2
                             last_word = -1
-                    if self.sentiment[word] == 'pos':
-                        total_neg += 1
-                        last_word = -1
+                            strong_sentiment = True
+                        elif self.sentiment[word] == 'pos':
+                            total_neg += 1
+                            last_word = -1
+                        else:
+                            total_pos += 1
+                            last_word = 1
                     else:
-                        total_pos += 1
-                        last_word = 1
+                        # if word in Chatbot.edge_cases:
+                        #     if Chatbot.edge_cases[word] in strong_positive:
+                        #         total_pos += 2
+                        #         last_word = 1
+                        #         strong_sentiment = True
+                        #     elif Chatbot.edge_cases[word] in strong_negative:
+                        #         total_neg += 2
+                        #         last_word = -1
+                        #         strong_sentiment = True
+                        if word in strong_positive:
+                            total_pos += 2
+                            last_word = 1
+                            strong_sentiment = True
+                        elif word in strong_negative:
+                            total_neg += 2
+                            last_word = -1
+                            strong_sentiment = True
+                        elif self.sentiment[word] == 'pos':
+                            total_pos += 1
+                            last_word = 1
+                        else:
+                            total_neg += 1
+                            last_word = -1               
+
+                index += 1
+                if word not in emphasizers:
+                    prev_word = word
+            if total_pos + total_neg < 2:
+                if total_pos > total_neg:
+                    return 1 if not (strong_sentiment or emphasis) else 2
+                elif total_pos < total_neg:
+                    return -1 if not (strong_sentiment or emphasis) else -2
                 else:
-                    if word in Chatbot.edge_cases:
-                        if Chatbot.edge_cases[word] in strong_positive:
-                            total_pos += 2
-                            last_word = 1
-                        elif Chatbot.edge_cases[word] in strong_negative:
-                            total_neg += 2
-                            last_word = -1
-                    if self.sentiment[word] == 'pos':
-                        total_pos += 1
-                        last_word = -1
-                    else:
-                        total_neg += 1
-                        last_word = 1               
-
-            index += 1
-            if word not in emphasizers:
-                prev_word = word
-
-        #print("Total Positive: ", total_pos)
-        #print("Total Negative: ", total_neg)
-        #print("Negator Present: ", negator_present)
-
-        # if the total number of sentiment words is 1 or less, do basic processing
-        if total_pos + total_neg < 2:
-            if total_pos > total_neg:
-                return 1
-            elif total_pos < total_neg:
-                return -1
+                    return 0
+            # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
+            elif negator_present and total_pos >= 1 and total_neg >= 1:
+                # if the last word is positive, return 1
+                if last_word == 1:
+                    return 1 if not (strong_sentiment or emphasis) else 2
+                else:
+                    return -1 if not (strong_sentiment or emphasis) else -2
+            # Catch-all for all other cases: just compare the total number of positive and negative words
             else:
-                return 0
-        # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
-        elif negator_present and total_pos >= 1 and total_neg >= 1:
-            # if the last word is positive, return 1
-            if last_word == 1:
-                return 1
-            else:
-                return -1
-        # Catch-all for all other cases: just compare the total number of positive and negative words
+                if total_pos > total_neg:
+                    return 1 if not (strong_sentiment or emphasis) else 2
+                elif total_pos < total_neg:
+                    return -1 if not (strong_sentiment or emphasis) else -2
+                else:
+                    return 0 
         else:
-            if total_pos > total_neg:
-                return 1
-            elif total_pos < total_neg:
-                return -1
+            for word in preprocessed_input:
+                if word in negators_conj:
+                    negator_present = True
+                if "\"" not in word and word in self.sentiment:
+                    if prev_word in negators:
+                        if self.sentiment[word] == 'pos':
+                            total_neg += 1
+                            last_word = -1
+                        else:
+                            total_pos += 1
+                            last_word = 1
+                    else:
+                        if self.sentiment[word] == 'pos':
+                            total_pos += 1
+                            last_word = 1
+                        else:
+                            total_neg += 1
+                            last_word = -1
+                index += 1
+                if word not in emphasizers:
+                    prev_word = word
+
+            #print(last_word)
+            if total_pos + total_neg < 2:
+                if total_pos > total_neg:
+                    return 1
+                elif total_pos < total_neg:
+                    return -1
+                else:
+                    return 0
+            # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
+            elif negator_present and total_pos >= 1 and total_neg >= 1:
+                # if the last word is positive, return 1
+                if last_word == 1:
+                    return 1
+                else:
+                    return -1
+            # Catch-all for all other cases: just compare the total number of positive and negative words
             else:
-                return 0            
+                if total_pos > total_neg:
+                    return 1
+                elif total_pos < total_neg:
+                    return -1
+                else:
+                    return 0                   
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
