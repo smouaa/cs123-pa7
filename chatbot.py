@@ -73,7 +73,7 @@ class Chatbot:
         if self.creative == True:
             greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie, and once Bert understands your taste in movies, Bert will try his best to recommend a movie you'll like! Also, put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
         else:
-            greeting_message = "Hey there, I'm Bert, a movies recommender bot. Tell me about a movie, and once I feel like I have a solid of understanding of your taste in movies, I'll try my best to recommend you movies you'd like. If I misunderstand anything, feel free to correct me."
+            greeting_message = "Hey there, I'm Bert, a movies recommender bot. Tell me about a movie, and once I feel like I have a solid of understanding of your taste in movies, I'll try my best to recommend you movies you'd like. If I misunderstand anything, feel free to correct me. Also, please include the title of the movie in quotation marks."
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -298,9 +298,17 @@ class Chatbot:
                 self.recommended_movies.clear()
             elif (self.num_recs_given >= 1 and any(word in input for word in confirmation_words)) or self.num_recs_given == 0:
                 if self.creative == True:
-                    response = "Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                    mov = self.recommended_movies.pop(0)
+                    res = ["Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(mov),
+                           "Try watching {}! Do you want another recommendation~? If not, type ':quit'!".format(mov),
+                           "How about watching {}?!? Do you want more recommendations? (๑ơ ₃ ơ)♥ Type :quit if you don't!".format(mov)]
+                    response = res[random.randint(0, len(res) - 1)]
                 else:
-                    response = "I believe you'd enjoy {}. Would you like another recommendation? Otherwise, type ':quit' to quit.".format(self.recommended_movies.pop(0))
+                    mov = self.recommended_movies.pop(0)
+                    res = ["I believe you'd enjoy {}. Would you like another recommendation? Otherwise, type ':quit' to quit.".format(mov),
+                           "{} seems like a good fit for you. Would you like to hear another recommendation? Type ':quit' to quit".format(mov),
+                           "I think you'd like {}. Would you like more recommendations? If you'd like to say goodbye, type ':quit'.".format(mov)]
+                    response = res[random.randint(0, len(res) - 1)]
                 self.num_recs_given += 1
             else:
                 if self.creative == True:
@@ -927,7 +935,7 @@ class Chatbot:
         Bert is a movie recommender bot who can give you movie recommendations based on your personal taste. After you 
         talk about 5 movies (at minimum), Bert will start giving you movie recommendations. 
         Make sure to include the title of the movie in quotes. If you need to correct Bert's evaluation of your opinion of
-        a movie, you can do so.
+        a movie, you can do so. 
         """
 
 
