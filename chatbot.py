@@ -65,17 +65,21 @@ class Chatbot:
         # print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
         # print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
         # print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
-        # print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
-        # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
-        # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
-        # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
-        # print('I saw "Titanic (1997)". : ', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)".')))
-        # print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess('I thought "Titanic (1997)" was great at first, but I then hated it')))
-        # print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)" but thought nothing of it')))
-        # print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)". Hate love hated loved')))
-        # print("I didn't really like \"Titanic (1997)\": ", self.extract_sentiment(self.preprocess("I didn't really like \"Titanic (1997)\"")))
-        # print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not like "Titanic (1997)"')))
-        # print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess("I didn't like \"Titanic (1997)\" at all")))
+        print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
+        print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
+        print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
+        print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
+        print('I saw "Titanic (1997)". : ', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)".')))
+        print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess('I thought "Titanic (1997)" was great at first, but I then hated it')))
+        print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)" but thought nothing of it')))
+        print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)". Hate love hated loved')))
+        print("I didn't really like \"Titanic (1997)\": ", self.extract_sentiment(self.preprocess("I didn't really like \"Titanic (1997)\"")))
+        print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not like "Titanic (1997)"')))
+        print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess("I didn't like \"Titanic (1997)\" at all")))
+        print('I think "Titanic (1997)" was great even though the acting was bad, I liked it: ', self.extract_sentiment(self.preprocess('I think "Titanic (1997)" was great even though the acting was bad, I liked it')))
+        print('I saw "Hated": ', self.extract_sentiment(self.preprocess('I saw "Hated"')))
+        print('I hated "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you"')))
+        print('I didn\'t at all enjoy "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I didn\'t at all enjoy "Titanic (1997)"')))
 
         # print(self.extract_titles(self.preprocess('I liked "The Notebook" a lot.')))
         # print('Titanic: ', self.find_movies_by_title('Titanic'))
@@ -563,7 +567,7 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1               
-                if word not in self.emphasizers:
+                if word in self.negators:
                     prev_word = word
 
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
@@ -600,7 +604,7 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1
-                if word not in self.emphasizers:
+                if word in self.negators:
                     prev_word = word
 
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
