@@ -22,7 +22,7 @@ class Chatbot:
     """Simple class to implement the chatbot for PA 6."""
 
     edge_cases = {'enjoyed': 'enjoy', 'enjoying': 'enjoy', 'enjoys': 'enjoy', 'loved': 'love', 'loving': 'love', 'loves': 'love', 'hated': 'hate', 'hates': 'hate', 'hating': 'hate', 'disliked': 'dislike', 'dislikes': 'dislike', 'disliking': 'dislike', 'liked': 'like', 'likes': 'like', 'liking': 'like', 'despised': 'despise', 'despises': 'despise', 'despising': 'despise', 'adored': 'adore', 'adores': 'adore', 'adoring': 'adore'}
-    negators = ['not', 'didnt', 'never', 'cant']
+    negators = ['not', 'didnt', 'never', 'cant', 'couldnt', 'shouldnt', 'dont']
     negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
     emphasizers = ['really', 'reaally', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
     strong_positive = ['love', 'adore', 'amazing', 'awesome', 'great', 'fantastic', 'wonderful', 'excellent', 'perfect', 'superb', 'terrific', 'brilliant', 'outstanding', 'fabulous', 'marvelous', 'splendid', 'stunning', 'amazing', 'astonishing', 'astounding', 'awesome', 'breathtaking', 'cool', 'dazzling', 'delightful', 'excellent', 'extraordinary', 'fabulous', 'fantastic', 'fine', 'first-class', 'first-rate', 'flawless', 'fortunate', 'fortunate', 'fortunate']
@@ -47,25 +47,33 @@ class Chatbot:
         self.movie_count = 0
         self.num_recs_given = 0
 
-        print('I hated "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you"')))
-        print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it')))
-        print('I really reeally liked "Zootopia": ', self.extract_sentiment(self.preprocess('I really reeally liked "Zootopia"')))
+        # print('I didn\'t really like "Titanic (1997)"', self.extract_sentiment(self.preprocess('I didn\'t really like "Titanic (1997)"')))
+        # print('I never liked "Titanic (1997)"', self.extract_sentiment(self.preprocess('I never liked "Titanic (1997)"')))
+        # print('I really enjoyed "Titanic (1997)"', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
+        # print('I saw "Titanic (1997)"', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)"')))
+        # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!')))
+        # print('I loved "10 Things I Hate About You"', self.extract_sentiment(self.preprocess('I loved "10 Things I Hate About You"')))
+        # print('I hated "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you"')))
+        # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it')))
+        # print('I really reeally liked "Zootopia": ', self.extract_sentiment(self.preprocess('I really reeally liked "Zootopia"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I liked "Titanic (1997)" and "Sleeping Beauty (1959)"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I never really liked "Titanic (1997)" or "Sleeping Beauty (1959)"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", but "Sleeping Beauty (1959)" was terrible')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", "Sleeping Beauty (1959)", and "The Lion King (1994)"')))
-        #print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
-        #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
-        #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
-        #print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
-        #print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
-        #print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
+        # print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
+        # print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
+        # print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
+        # print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
+        # print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
+        # print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
         # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
         # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
         # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
+        # print('I saw "Titanic (1997)". : ', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)".')))
         # print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess('I thought "Titanic (1997)" was great at first, but I then hated it')))
         # print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)" but thought nothing of it')))
         # print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)". Hate love hated loved')))
+        # print("I didn't really like \"Titanic (1997)\": ", self.extract_sentiment(self.preprocess("I didn't really like \"Titanic (1997)\"")))
         # print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not like "Titanic (1997)"')))
         # print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess("I didn't like \"Titanic (1997)\" at all")))
 
@@ -509,26 +517,16 @@ class Chatbot:
         :returns: a numerical value for the sentiment of the text
         """
 
-        # List of words that negate the sentiment of the phrase
-        # e.g. "Titanic (1997)" started out terrible, but the ending was totally great and I loved it!" -> 1
-        #print(preprocessed_input)
-        # negators = ['not', 'didnt', 'never', 'cant']
-        # negators_conj = ['but', 'yet', 'nonetheless', 'although', 'despite', 'however', 'nevertheless', 'still', 'though', 'unless', 'unlike', 'until', 'whereas']
-        # emphasizers = ['really', 'reaally', 'very', 'extremely', 'totally', 'completely', 'absolutely', 'utterly', 'perfectly', 'entirely', 'thoroughly', 'completely', 'utterly', 'fully', 'wholly', 'altogether', 'entirely', 'fully', 'perfectly', 'quite', 'rather', 'somewhat', 'too', 'utterly', 'very', 'awfully', 'badly', 'completely', 'considerably', 'decidedly', 'deeply', 'enormously', 'entirely', 'especially', 'exceptionally', 'extremely', 'fiercely', 'flipping']
-        # strong_positive = ['love', 'adore', 'amazing', 'awesome', 'great', 'fantastic', 'wonderful', 'excellent', 'perfect', 'superb', 'terrific', 'brilliant', 'outstanding', 'fabulous', 'marvelous', 'splendid', 'stunning', 'amazing', 'astonishing', 'astounding', 'awesome', 'breathtaking', 'cool', 'dazzling', 'delightful', 'excellent', 'extraordinary', 'fabulous', 'fantastic', 'fine', 'first-class', 'first-rate', 'flawless', 'fortunate', 'fortunate', 'fortunate']
-        # strong_negative = ['hate', 'despise', 'terrible', 'awful', 'horrible', 'bad', 'lousy', 'poor', 'abysmal', 'atrocious', 'awful', 'bad', 'bogus', 'cheap', 'crappy', 'crummy', 'cruddy', 'crude', 'deplorable', 'dreadful', 'dumb', 'dysfunctional', 'embarrassing', 'enormous', 'evil']
-
         total_pos = 0
         total_neg = 0
         last_word = 0
         negator_present = False
 
-        strong_sentiment = False
-        emphasis = False
-
-        index = 0
         prev_word = ""
         if self.creative:
+            strong_sentiment = False
+            emphasis = False            
+
             for word in preprocessed_input:
                 if word in self.negators_conj:
                     negator_present = True
@@ -565,20 +563,11 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1               
-
-                index += 1
                 if word not in self.emphasizers:
                     prev_word = word
-            print(emphasis)
-            if total_pos + total_neg < 2:
-                if total_pos > total_neg:
-                    return 1 if not (strong_sentiment or emphasis) else 2
-                elif total_pos < total_neg:
-                    return -1 if not (strong_sentiment or emphasis) else -2
-                else:
-                    return 0
+
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
-            elif negator_present and total_pos >= 1 and total_neg >= 1:
+            if negator_present and total_pos >= 1 and total_neg >= 1:
                 # if the last word is positive, return 1
                 if last_word == 1:
                     return 1 if not (strong_sentiment or emphasis) else 2
@@ -611,20 +600,11 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1
-                index += 1
                 if word not in self.emphasizers:
                     prev_word = word
 
-            #print(last_word)
-            if total_pos + total_neg < 2:
-                if total_pos > total_neg:
-                    return 1
-                elif total_pos < total_neg:
-                    return -1
-                else:
-                    return 0
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
-            elif negator_present and total_pos >= 1 and total_neg >= 1:
+            if negator_present and total_pos >= 1 and total_neg >= 1:
                 # if the last word is positive, return 1
                 if last_word == 1:
                     return 1
