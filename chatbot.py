@@ -121,6 +121,7 @@ class Chatbot:
     def check_quotation_marks(self, s):
         """
         This helper function checks if the string has closed quotation marks.
+        Citation: https://stackoverflow.com/questions/64539353/algo-to-check-that-a-string-doesnt-have-missing-close-quote-or
         """
         lst = []
         for char in s:
