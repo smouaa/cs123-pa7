@@ -27,7 +27,7 @@ Did not implement any of the above features: NO
 #########################################################################################
 # Team Contributions                                                                    #
 #########################################################################################
-Katie - I implemented binarize, recommend, and similarity. For creative mode, I implemented edit distance and disambiguation.
+Katie - I implemented binarize(), recommend(), and similarity(). For creative mode, I implemented edit_distance(), find_movies_closest_to_title(), and disambiguation().
 Sheng - I implemented the process() function (as well as the greeting, goodbye, and intro messages). For creative mode, I implemented "responding to arbitrary input," "identifying and responding to emotions," and "chatbot theme/persona."
 Albert - I implemented the sentiment-related functions (extract_sentiment starter/creative extract_sentiment_for_movies)
 Stella - In starter mode, I implemented extract_titles() and find_movies_by_title(). In creative mode, I implemented extensions of find_movies_by_title(): identifying movies without correct capitalization (part 2), alternate titles, foreign titles, and disambiguation (part 1). I also completed the ethics question.

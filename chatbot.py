@@ -703,13 +703,10 @@ class Chatbot:
         """
         # numpy argmax?
         
-        regex = '([0-9]{4})'
-        
         closest = []
         distances = []
 
         movie = title.lower()
-        #print(movie)
         for t in self.titles:
             index = t[0].find(" (")
             if index != -1:                                           # if there exists a date
@@ -719,7 +716,6 @@ class Chatbot:
             distances.append(self.edit_distance(movie, choice))
         
         minimum = min(distances)
-        #print(minimum)
         for i in range(len(distances)):
             if minimum <= max_distance and distances[i] == minimum:
                 closest.append(i)
@@ -750,8 +746,6 @@ class Chatbot:
         :returns: a list of indices corresponding to the movies identified by
         the clarification
         """
-        # clarification = string of user input
-        # candidates = list of candidate indices
 
         clarify = clarification.lower()
         disambiguation = []
@@ -760,7 +754,7 @@ class Chatbot:
                    3: ["third", "the third one", "number three", "no. 3", "3", "3rd"], 4: ["fourth", "the fourth one", "number four", "no. 4", "4", "4th"],
                    5: ["five", "the fifth one", "number five", "no. 5", "5", "5th"], 6: ["six", "the sixth one", "number six", "no. 6", "6", "6th"],
                    7: ["seven", "the seventh one", "number seven", "no. 7", "7", "7th"], 8: ["eight", "the eighth one", "number eight", "no. 8", "8", "8th"],
-                   9: ["nine", "the ninth one", "number nine", "no. 9", "9", "9th"], 10: ["ten", "the tenth one", "number ten", "no. 10", "10", "10TH"]}
+                   9: ["nine", "the ninth one", "number nine", "no. 9", "9", "9th"], 10: ["ten", "the tenth one", "number ten", "no. 10", "10", "10th"]}
         
         recent = ["most recent", "latest", "initial", "prior"]
         old = ["oldest", "least recent", "earliest", "last"]
@@ -769,15 +763,19 @@ class Chatbot:
         id = "the ([A-Za-z ]+) one"
         the_one = "asdflker;jew;qr"
         
+        # checking if clarify is talking about first, second, third, etc.
         for index in indexes:
             if clarify in indexes[index]:
                 disambiguation.append(candidates[index - 1])
 
+        # checks if clarify talks about first or last movie made
         if clarify in recent:
             disambiguation.append(candidates[0])
         elif clarify in old:
             disambiguation.append(candidates[len(candidates)])
         
+        # if clarify has the...one, check if it talks about first/last movie
+        # or if capture group exists inside the title
         elif bool(re.search(id, clarify)) == True:
             the_one = re.search(id, clarify).group(1).lower()
             if the_one in recent:
@@ -790,13 +788,15 @@ class Chatbot:
                     choice = self.titles[c][0][:i].lower()
                     if the_one in choice:
                         disambiguation.append(c)
-            
+        
+        # if user specifies year
         elif bool(re.search(year, clarification)) == True:
             for c in candidates:
                 title = self.titles[c][0]
                 if clarification in title:
                     disambiguation.append(c)
 
+        # if clarification exists inside title
         else:
             for c in candidates:
                 i = self.titles[c][0].find(" (")
@@ -805,7 +805,6 @@ class Chatbot:
                     disambiguation.append(c)
 
         return disambiguation
-
 
 
     ############################################################################
@@ -832,7 +831,6 @@ class Chatbot:
         :returns: a binarized version of the movie-rating matrix
         """
         # do not use self.ratings directly in this function.
-
         new_ratings = ratings
 
         new_ratings[(ratings <= threshold) & (ratings != 0)] = -1.0
@@ -893,12 +891,8 @@ class Chatbot:
         """
 
         # item-item collaborative filtering with cosine similarity, no mean-centering, and no normalization of scores.                                                              #
-
         # exclude movies the user has already rated
         # can assume ratings_matrix does not contain the current user's ratings.
-
-        # for each movie i in the dataset
-        # calculate the rating of user's rating of the movie i and the cosine between vectors for movies i and j
 
         scores = []
         recommendations = []
