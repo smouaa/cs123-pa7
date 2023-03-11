@@ -676,9 +676,6 @@ class Chatbot:
         :returns: a list of tuples, where the first item in the tuple is a movie
         title, and the second is the sentiment in the text toward that movie
         """
-<<<<<<< Updated upstream
-        return []
-=======
         
         pos_joiner = ['and', 'both', 'either', 'or']
         neg_joiner = ['but', 'neither', 'nor', 'either']
@@ -725,7 +722,7 @@ class Chatbot:
                 elif sublist[0] in neg_joiner:
                     final.append((movies[sublists.index(sublist)], -1 * first_sentiment))
         return final
->>>>>>> Stashed changes
+
 
     def edit_distance(self, str1, str2):
         """Citation: https://leetcode.com/problems/edit-distance/solutions/159295/python-solutions-and-intuition/"""
