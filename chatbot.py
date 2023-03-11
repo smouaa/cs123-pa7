@@ -52,10 +52,6 @@ class Chatbot:
         # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", but "Sleeping Beauty (1959)" was terrible')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", "Sleeping Beauty (1959)", and "The Lion King (1994)"')))
         #print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
-<<<<<<< Updated upstream
-=======
-        #print(self.disambiguate("1997", [1359, 2716]))
->>>>>>> Stashed changes
         #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
         #print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
