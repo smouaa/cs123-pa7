@@ -47,6 +47,9 @@ class Chatbot:
         self.movie_count = 0
         self.num_recs_given = 0
 
+        print('I hated "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you"')))
+        print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it')))
+        print('I really reeally liked "Zootopia": ', self.extract_sentiment(self.preprocess('I really reeally liked "Zootopia"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I liked "Titanic (1997)" and "Sleeping Beauty (1959)"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I never really liked "Titanic (1997)" or "Sleeping Beauty (1959)"')))
         # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", but "Sleeping Beauty (1959)" was terrible')))
@@ -529,23 +532,16 @@ class Chatbot:
             for word in preprocessed_input:
                 if word in self.negators_conj:
                     negator_present = True
+                if word in self.emphasizers:
+                    emphasis = True
                 if "\"" not in word and word in self.sentiment:
                     if prev_word in self.negators:
-                        # if word in Chatbot.edge_cases:
-                        #     if Chatbot.edge_cases[word] in strong_negative:
-                        #         total_pos += 2
-                        #         last_word = 1
-                        #         strong_sentiment = True
-                        #     elif Chatbot.edge_cases[word] in strong_positive:
-                        #         total_neg += 2
-                        #         last_word = -1
-                        #         strong_sentiment = True
                         if word in self.strong_negative:
-                            total_pos += 2
+                            total_pos += 1
                             last_word = 1
                             strong_sentiment = True
                         elif word in self.strong_positive:
-                            total_neg += 2
+                            total_neg += 1
                             last_word = -1
                             strong_sentiment = True
                         elif self.sentiment[word] == 'pos':
@@ -555,21 +551,12 @@ class Chatbot:
                             total_pos += 1
                             last_word = 1
                     else:
-                        # if word in Chatbot.edge_cases:
-                        #     if Chatbot.edge_cases[word] in strong_positive:
-                        #         total_pos += 2
-                        #         last_word = 1
-                        #         strong_sentiment = True
-                        #     elif Chatbot.edge_cases[word] in strong_negative:
-                        #         total_neg += 2
-                        #         last_word = -1
-                        #         strong_sentiment = True
                         if word in self.strong_positive:
-                            total_pos += 2
+                            total_pos += 1
                             last_word = 1
                             strong_sentiment = True
                         elif word in self.strong_negative:
-                            total_neg += 2
+                            total_neg += 1
                             last_word = -1
                             strong_sentiment = True
                         elif self.sentiment[word] == 'pos':
@@ -582,6 +569,7 @@ class Chatbot:
                 index += 1
                 if word not in self.emphasizers:
                     prev_word = word
+            print(emphasis)
             if total_pos + total_neg < 2:
                 if total_pos > total_neg:
                     return 1 if not (strong_sentiment or emphasis) else 2
