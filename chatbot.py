@@ -46,45 +46,6 @@ class Chatbot:
         self.recommendations = []
         self.movie_count = 0
         self.num_recs_given = 0
-
-        # print('I didn\'t really like "Titanic (1997)"', self.extract_sentiment(self.preprocess('I didn\'t really like "Titanic (1997)"')))
-        # print('I never liked "Titanic (1997)"', self.extract_sentiment(self.preprocess('I never liked "Titanic (1997)"')))
-        # print('I really enjoyed "Titanic (1997)"', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
-        # print('I saw "Titanic (1997)"', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)"')))
-        # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!')))
-        # print('I loved "10 Things I Hate About You"', self.extract_sentiment(self.preprocess('I loved "10 Things I Hate About You"')))
-        # print('I hated "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you"')))
-        # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it')))
-        # print('I really reeally liked "Zootopia": ', self.extract_sentiment(self.preprocess('I really reeally liked "Zootopia"')))
-        # print(self.extract_sentiment_for_movies(self.preprocess('I liked "Titanic (1997)" and "Sleeping Beauty (1959)"')))
-        # print(self.extract_sentiment_for_movies(self.preprocess('I never really liked "Titanic (1997)" or "Sleeping Beauty (1959)"')))
-        # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", but "Sleeping Beauty (1959)" was terrible')))
-        # print(self.extract_sentiment_for_movies(self.preprocess('I really enjoyed "Titanic (1997)", "Sleeping Beauty (1959)", and "The Lion King (1994)"')))
-        # print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
-        # print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
-        # print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
-        # print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
-        # print('I never really liked "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997)"')))
-        # print('I love "La La Land": ', self.extract_sentiment(self.preprocess('I love "La La Land"')))
-        # print('I loved "10 things I hate about you": ', self.extract_sentiment(self.preprocess('I loved "10 things I hate about you"'))) 
-        # print('I hated "10 things I hate about you", but I loved it: ', self.extract_sentiment(self.preprocess('I hated "10 things I hate about you", but I loved it'))) 
-        # print('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!: ', self.extract_sentiment(self.preprocess('"Titanic (1997)" started out terrible, but the ending was totally great and I loved it!'))) 
-        # print('I saw "Titanic (1997)". : ', self.extract_sentiment(self.preprocess('I saw "Titanic (1997)".')))
-        # print('I thought "Titanic (1997)" was great at first, but I then hated it: ', self.extract_sentiment(self.preprocess('I thought "Titanic (1997)" was great at first, but I then hated it')))
-        # print('I watched "Titanic (1997)" but thought nothing of it: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)" but thought nothing of it')))
-        # print('I watched "Titanic (1997)". Hate love hated loved: ', self.extract_sentiment(self.preprocess('I watched "Titanic (1997)". Hate love hated loved')))
-        # print("I didn't really like \"Titanic (1997)\": ", self.extract_sentiment(self.preprocess("I didn't really like \"Titanic (1997)\"")))
-        # print('I did not like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not like "Titanic (1997)"')))
-        # print("I didn't like \"Titanic (1997)\" at all: ", self.extract_sentiment(self.preprocess("I didn't like \"Titanic (1997)\" at all")))
-
-        # print(self.extract_titles(self.preprocess('I liked "The Notebook" a lot.')))
-        # print('Titanic: ', self.find_movies_by_title('Titanic'))
-        # print(self.find_movies_by_title("Scream"))
-        # print(self.find_movies_by_title("Percy Jackson"))
-        # print(self.find_movies_by_title("Se7en"))
-        # print(self.find_movies_by_title("La Guerre du feu"))
-        
-        # count number of movies that the user has rated
         
 
         ########################################################################
@@ -112,7 +73,7 @@ class Chatbot:
         if self.creative == True:
             greeting_message = "Hi! I'm Bert, a movie recommender bot! ♡⸜(˶˃ ᵕ ˂˶)⸝♡ Tell me about a movie, and once Bert understands your taste in movies, Bert will try his best to recommend a movie you'll like! Also, put the title in quotation marks please! It'll make Bert's life easier. (人・ェ・) If Bert misunderstands anything, tell Bert!"
         else:
-            greeting_message = "Hey there, I'm Bert, a movies recommender bot. Tell me about a movie, and once I feel like I have a solid of understanding of your taste in movies, I'll try my best to recommend you movies you'd like. If I misunderstand anything, feel free to correct me."
+            greeting_message = "Hey there, I'm Bert, a movies recommender bot. Tell me about a movie, and once I feel like I have a solid of understanding of your taste in movies, I'll try my best to recommend you movies you'd like. If I misunderstand anything, feel free to correct me. Also, please include the title of the movie in quotation marks."
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -337,9 +298,17 @@ class Chatbot:
                 self.recommended_movies.clear()
             elif (self.num_recs_given >= 1 and any(word in input for word in confirmation_words)) or self.num_recs_given == 0:
                 if self.creative == True:
-                    response = "Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(self.recommended_movies.pop(0))
+                    mov = self.recommended_movies.pop(0)
+                    res = ["Bert thinks you'll like {}! d(･∀･○) Would you like another recommendation? Otherwise, type :quit to quit!".format(mov),
+                           "Try watching {}! Do you want another recommendation~? If not, type ':quit'!".format(mov),
+                           "How about watching {}?!? Do you want more recommendations? (๑ơ ₃ ơ)♥ Type :quit if you don't!".format(mov)]
+                    response = res[random.randint(0, len(res) - 1)]
                 else:
-                    response = "I believe you'd enjoy {}. Would you like another recommendation? Otherwise, type ':quit' to quit.".format(self.recommended_movies.pop(0))
+                    mov = self.recommended_movies.pop(0)
+                    res = ["I believe you'd enjoy {}. Would you like another recommendation? Otherwise, type ':quit' to quit.".format(mov),
+                           "{} seems like a good fit for you. Would you like to hear another recommendation? Type ':quit' to quit".format(mov),
+                           "I think you'd like {}. Would you like more recommendations? If you'd like to say goodbye, type ':quit'.".format(mov)]
+                    response = res[random.randint(0, len(res) - 1)]
                 self.num_recs_given += 1
             else:
                 if self.creative == True:
@@ -563,7 +532,7 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1               
-                if word not in self.emphasizers:
+                if word in self.negators:
                     prev_word = word
 
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
@@ -600,7 +569,7 @@ class Chatbot:
                         else:
                             total_neg += 1
                             last_word = -1
-                if word not in self.emphasizers:
+                if word in self.negators:
                     prev_word = word
 
             # if there are 1 or more sentiment words per category and a negator is present, do more complex processing
@@ -984,7 +953,7 @@ class Chatbot:
         Bert is a movie recommender bot who can give you movie recommendations based on your personal taste. After you 
         talk about 5 movies (at minimum), Bert will start giving you movie recommendations. 
         Make sure to include the title of the movie in quotes. If you need to correct Bert's evaluation of your opinion of
-        a movie, you can do so.
+        a movie, you can do so. 
         """
 
 

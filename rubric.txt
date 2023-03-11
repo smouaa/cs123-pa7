@@ -20,14 +20,14 @@ FEATURE - Dialogue for spell-checking: YES
 FEATURE - Dialogue for disambiguation: NO
 FEATURE - Communicating sentiments and movies extracted to the user given multiple-movie input: NO
 FEATURE - Responding to arbitrary input: YES
-FEATURE - Identifying and responding to emotions: NO
+FEATURE - Identifying and responding to emotions: YES
 FEATURE - Chatbot theme/persona: YES
 Did not implement any of the above features: NO
 
 #########################################################################################
 # Team Contributions                                                                    #
 #########################################################################################
-Katie -
+Katie - I implemeneted binarize, recommend, and similarity. For creative mode, I implemented edit distance and disambiguation.
 Sheng - I implemented the process() function (as well as the greeting, goodbye, and intro messages). For creative mode, I implemented "responding to arbitrary input," "identifying and responding to emotions," and "chatbot theme/persona."
 Albert - I implemented the sentiment-related functions (extract_sentiment starter/creative extract_sentiment_for_movies)
 Stella - In starter mode, I implemented extract_titles() and find_movies_by_title(). In creative mode, I implemented extensions of find_movies_by_title(): identifying movies without correct capitalization (part 2), alternate titles, foreign titles, and disambiguation (part 1). I also completed the ethics question.
