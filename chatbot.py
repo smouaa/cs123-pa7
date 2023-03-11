@@ -754,36 +754,54 @@ class Chatbot:
         # candidates = list of candidate indices
 
         clarify = clarification.lower()
-
         disambiguation = []
 
-        indexes = {1: ["first", "the first one", "number one", "no. 1"], 2: ["second", "the second one", "number two", "no. 2"], 
-                   3: ["third", "the third one", "number three", "no. 3"], 4: ["fourth", "the fourth one", "number four", "no. 4"],
-                   5: ["five", "the fifth one", "number five", "no. 5"], 6: ["six", "the sixth one", "number six", "no. 6"],
-                   7: ["seven", "the seventh one", "number seven", "no. 7"], 8: ["eight", "the eighth one", "number eight", "no. 8"],
-                   9: ["nine", "the ninth one", "number nine", "no. 9"], 10: ["ten", "the tenth one", "number ten", "no. 10"]}
+        indexes = {1: ["first", "the first one", "number one", "no. 1", "1", "1st"], 2: ["second", "the second one", "number two", "no. 2", "2", "2nd"], 
+                   3: ["third", "the third one", "number three", "no. 3", "3", "3rd"], 4: ["fourth", "the fourth one", "number four", "no. 4", "4", "4th"],
+                   5: ["five", "the fifth one", "number five", "no. 5", "5", "5th"], 6: ["six", "the sixth one", "number six", "no. 6", "6", "6th"],
+                   7: ["seven", "the seventh one", "number seven", "no. 7", "7", "7th"], 8: ["eight", "the eighth one", "number eight", "no. 8", "8", "8th"],
+                   9: ["nine", "the ninth one", "number nine", "no. 9", "9", "9th"], 10: ["ten", "the tenth one", "number ten", "no. 10", "10", "10TH"]}
+        
+        recent = ["most recent", "latest", "initial", "prior"]
+        old = ["oldest", "least recent", "earliest", "last"]
 
-        year = re.compile("[0-9]{4}")
+        year = "[0-9]{4}"
+        id = "the ([A-Za-z ]+) one"
+        the_one = "asdflker;jew;qr"
+        
+        for index in indexes:
+            if clarify in indexes[index]:
+                disambiguation.append(candidates[index - 1])
 
-        if year.match(clarify) == True:
+        if clarify in recent:
+            disambiguation.append(candidates[0])
+        elif clarify in old:
+            disambiguation.append(candidates[len(candidates)])
+        
+        elif bool(re.search(id, clarify)) == True:
+            the_one = re.search(id, clarify).group(1).lower()
+            if the_one in recent:
+                disambiguation.append(candidates[0])
+            elif the_one in old:
+                disambiguation.append(candidates[len(candidates)])
+            else:
+                for c in candidates:
+                    i = self.titles[c][0].find(" (")
+                    choice = self.titles[c][0][:i].lower()
+                    if the_one in choice:
+                        disambiguation.append(c)
+            
+        elif bool(re.search(year, clarification)) == True:
             for c in candidates:
                 title = self.titles[c][0]
-                if clarify in title:
+                if clarification in title:
                     disambiguation.append(c)
 
-        
-        elif clarify in indexes.values():
-            for index in indexes:
-                if clarify in indexes[index]:
-                    disambiguation.append(candidates[index - 1])
-        
         else:
             for c in candidates:
                 i = self.titles[c][0].find(" (")
-                print(i)
                 choice = self.titles[c][0][:i].lower()
-                print(choice)
-                if clarify in choice:
+                if clarify in choice:           
                     disambiguation.append(c)
 
         return disambiguation
