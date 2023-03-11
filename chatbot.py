@@ -745,6 +745,8 @@ class Chatbot:
         # clarification = string of user input
         # candidates = list of candidate indices
 
+        clarify = clarification.lower()
+
         disambiguation = []
 
         indexes = {1: ["first", "the first one", "number one", "no. 1"], 2: ["second", "the second one", "number two", "no. 2"], 
@@ -754,23 +756,26 @@ class Chatbot:
                    9: ["nine", "the ninth one", "number nine", "no. 9"], 10: ["ten", "the tenth one", "number ten", "no. 10"]}
 
         year = re.compile("[0-9]{4}")
-        
-        if year.match(clarification) == True:
+
+        if year.match(clarify) == True:
             for c in candidates:
                 title = self.titles[c][0]
-                if clarification in title:
+                if clarify in title:
                     disambiguation.append(c)
 
-
-        elif clarification in indexes.values():
+        
+        elif clarify in indexes.values():
             for index in indexes:
-                if clarification in indexes[index]:
-                    disambiguation.append(candidates[index])
-
+                if clarify in indexes[index]:
+                    disambiguation.append(candidates[index - 1])
+        
         else:
             for c in candidates:
-                title = self.titles[c][0]
-                if clarification in title:
+                i = self.titles[c][0].find(" (")
+                print(i)
+                choice = self.titles[c][0][:i].lower()
+                print(choice)
+                if clarify in choice:
                     disambiguation.append(c)
 
         return disambiguation
