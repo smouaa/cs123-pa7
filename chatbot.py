@@ -44,7 +44,6 @@ class Chatbot:
         self.num_recs_given = 0
 
         #print(self.find_movies_closest_to_title("Sleeping Beaty", 5))
-        print(self.disambiguate("1997", [1359, 2716]))
         #print('I never really liked "Titanic (1997) until the end": ', self.extract_sentiment(self.preprocess('I never really liked "Titanic (1997) until the end"')))
         #print('I did not really like "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I did not really like "Titanic (1997)"')))
         #print('I really enjoyed "Titanic (1997)": ', self.extract_sentiment(self.preprocess('I really enjoyed "Titanic (1997)"')))
@@ -664,7 +663,7 @@ class Chatbot:
         :returns: a list of tuples, where the first item in the tuple is a movie
         title, and the second is the sentiment in the text toward that movie
         """
-        pass
+        return []
 
     def edit_distance(self, str1, str2):
         """Citation: https://leetcode.com/problems/edit-distance/solutions/159295/python-solutions-and-intuition/"""
@@ -764,8 +763,13 @@ class Chatbot:
 
         disambiguation = []
 
+        indexes = {1: ["first", "the first one", "number one", "no. 1"], 2: ["second", "the second one", "number two", "no. 2"], 
+                   3: ["third", "the third one", "number three", "no. 3"], 4: ["fourth", "the fourth one", "number four", "no. 4"],
+                   5: ["five", "the fifth one", "number five", "no. 5"], 6: ["six", "the sixth one", "number six", "no. 6"],
+                   7: ["seven", "the seventh one", "number seven", "no. 7"], 8: ["eight", "the eighth one", "number eight", "no. 8"],
+                   9: ["nine", "the ninth one", "number nine", "no. 9"], 10: ["ten", "the tenth one", "number ten", "no. 10"]}
+
         year = re.compile("[0-9]{4}")
-        index = re.compile("[0-9]{2}")
         
         if year.match(clarification) == True:
             for c in candidates:
@@ -773,8 +777,11 @@ class Chatbot:
                 if clarification in title:
                     disambiguation.append(c)
 
-        elif index.match(clarification) == True:
-            disambiguation.append(candidates[clarification])
+
+        elif clarification in indexes.values():
+            for index in indexes:
+                if clarification in indexes[index]:
+                    disambiguation.append(candidates[index])
 
         else:
             for c in candidates:
